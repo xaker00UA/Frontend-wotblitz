@@ -1,0 +1,66 @@
+
+
+
+
+
+
+
+.container {
+    display: flex;
+    /* position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%); */
+    margin: auto;
+    background-color: white;
+    z-index: 10;
+    height: 60px;
+    justify-content: space-between; /* Распределяет элементы по всему пространству */
+    align-items: center; /* Центрирует элементы по вертикали */
+  }
+
+.content-box {
+display: flex;
+align-items: center; /* Центрируем элементы внутри content-box по вертикали */
+}
+@media (max-width: 768px) {
+  .content-box{
+    display: none;
+  }
+}
+.nav {
+display: flex;
+gap: 15px; /* Отступы между пунктами меню */
+list-style: none;
+}
+
+.nav li {
+display: inline-block;
+}
+.search-and-button-box{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.ant-select {
+margin-left: 20px;
+margin-right: 20px; /* Добавляем отступ от навигации к полю поиска */
+}
+
+.text-end {
+display: flex;
+gap: 15px; /* Отступы между кнопками */
+/* align-items: center; */
+}
+.text-end button{
+    /* height: 100px;
+    width: 300px; */
+    display: flex;
+    justify-content: left; /* Центрирует по горизонтали */
+    align-items: center;  
+    justify-content: left;
+    color: black;
+    background-color: blue;
+    text-align: start;
+    }
