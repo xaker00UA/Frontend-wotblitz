@@ -1,189 +1,174 @@
 import React, { useState } from "react";
-import { Table, Button } from "antd";
-// In the fifth row, other columns are merged into first column
-// by setting it's colSpan to be 0
+import { Table, Button, Spin } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
+import { getColor } from "../utils/getColor";
 
-const App = ({ tanks, update, now }) => {
-  // Состояние для управления видимостью строк
-  const [showHiddenRows, setShowHiddenRows] = useState(false);
-  const color = (value, params) => {
-    const thresholds = {
-      fights: [1000, 5000, 20000],
-      wins: [50, 60, 70],
-      damage: [2400, 2800, 3000],
-      accuracy: [80, 85, 90],
-      survival: [40, 50, 60],
-    };
+const labelMapping = {
+  battles: "fights",
+  winrate: "wins",
+  damage: "damage",
+  accuracy: "accuracy",
+  survival: "survival",
+};
+const alternateArrays = (tanks, update, now) => {
+  const commonIds = new Set([...tanks.map((item) => item.tank_id)]);
 
-    const colors = {
-      fights: ["grey", "green", "blue", "purple"],
-    };
-    for (let i = 0; i < thresholds[params].length; i++) {
-      if (value < thresholds[params][i]) {
-        const col = colors["fights"][i];
-        return <span style={{ color: col }}>{value}</span>;
-      }
-    }
-    const col = colors["fights"][3];
-    return <span style={{ color: col }}>{value}</span>;
-  };
+  const sortById = (arr) =>
+    arr
+      .filter((item) => commonIds.has(item.tank_id))
+      .sort((a, b) => a.tank_id - b.tank_id);
 
+  const sortedTanks = sortById(tanks);
+  const sortedUpdate = sortById(update);
+  const sortedNow = sortById(now);
+
+  const maxLength = Math.max(
+    sortedTanks.length,
+    sortedUpdate.length,
+    sortedNow.length
+  );
+
+  return Array.from({ length: maxLength }).flatMap((_, i) => [
+    sortedTanks[i],
+    sortedUpdate[i],
+    sortedNow[i],
+  ]);
+};
+
+// Вспомогательная функция: Генерация колонок для таблицы
+const generateColumns = (display = false) => {
+  // Функция для стилей ячеек
   const styling = (_, index) => {
-    if ((index % 3 === 1 || index % 3 === 2) && !showHiddenRows) {
-      return { style: { display: "none" } }; // Скрыть вторую и третью строки
+    if ((index % 3 === 1 || index % 3 === 2) && !display) {
+      return { style: { display: "none" } }; // Возвращаем стиль для скрытия
     }
-    return {};
+    return {}; // Возвращаем пустой стиль, если условие не выполнено
+  };
+  const getCellRender = (index) => {
+    if (index % 3 === 0) return "Сессия";
+    if (index % 3 === 1) return "Апгрейд";
+    return "Сейчас";
   };
 
-  // Столбцы таблицы
-  const columns = [
+  return [
     {
       title: "Name",
       dataIndex: "name",
-
       minWidth: "max-content",
       render: (text) => <a>{text}</a>,
-      onCell: (_, index) => {
-        if (index % 3 === 0) {
-          return { rowSpan: 3 }; // Первая строка Name занимает 3 строки
-        }
-        return { rowSpan: 0 }; // Для остальных строк пусто
-      },
+      onCell: (_, index) => ({
+        rowSpan: index % 3 === 0 ? 3 : 0, // Объединение строк
+      }),
     },
     {
       title: "View",
-      dataIndex: "view",
       minWidth: 50,
       onCell: styling,
-      render: (text, record, index) => {
-        // Задаем значение ячейки в зависимости от индекса
-        if (index % 3 === 0) {
-          return "Сессия";
-        } else if (index % 3 === 1) {
-          return "Апргрейд";
-        } else {
-          return "Сейчас";
-        }
+      render: (_, record, index) => {
+        // Сохраняем текущее значение View в записи
+        const viewValue = getCellRender(index);
+        record.viewName = viewValue; // Сохраняем значение для других колонок
+        return viewValue;
       },
     },
-    {
-      title: "Бои",
-      minWidth: 20,
-      dataIndex: ["all", "Бои"],
-      onCell: styling,
-    },
-    {
-      title: "Победы",
-      dataIndex: ["all", "Победы"],
+    ...Object.entries(labelMapping).map(([key, entity]) => ({
+      title: key,
+      dataIndex: ["all", key],
       minWidth: 20,
       onCell: styling,
-      render: (value) => color(value, "wins"),
-    },
-    {
-      title: "Урон",
-      dataIndex: ["all", "Урон"],
-      minWidth: 20,
-      onCell: styling,
-      render: (value) => color(value, "damage"),
-    },
-    {
-      title: "Точность",
-      dataIndex: ["all", "Точность"],
-      minWidth: 20,
-      onCell: styling,
-      render: (value) => color(value, "accuracy"),
-    },
-    {
-      title: "Выживаемость",
-      dataIndex: ["all", "Выживаемость"],
-      minWidth: 20,
-      onCell: styling,
-      render: (value) => color(value, "survival"),
-    },
+      render: (value, record) => {
+        const color = getColor(record.viewName, entity, value); // Получаем цвет на основе данных
+        return <span style={{ color: color }}>{value}</span>;
+      },
+    })),
   ];
+};
 
-  // Функция для переключения видимости строк
-  const toggleVisibility = () => {
-    setShowHiddenRows((prev) => !prev); // Переключить видимость
-  };
-  const alternateArrays = (tanks, update, now) => {
-    // Составляем множество ID объектов из tanks и update
-    const commonIds = new Set(
-      ...[
-        tanks.map((item) => item.tank_id), // IDs из tanks
-        update.map((item) => item.tank_id), // IDs из update
-      ]
-    );
+// Основной компонент App
+const App = ({ tanks, update, now }) => {
+  const [showHiddenRows, setShowHiddenRows] = useState(false);
 
-    // Фильтруем now, оставляя только объекты с ID из commonIds
-    const filteredNow = now.filter((item) => commonIds.has(item.tank_id));
+  // Переключение видимости строк
+  const toggleVisibility = () => setShowHiddenRows((prev) => !prev);
 
-    // Функция для сортировки массива по tank_id
-    const sortById = (arr) => arr.sort((a, b) => a.tank_id - b.tank_id);
-
-    // Сортируем все массивы по tank_id
-    const sortedTanks = sortById(tanks);
-    const sortedUpdate = sortById(update);
-    const sortedNow = sortById(filteredNow);
-
-    // Чередуем элементы из каждого массива
-    const maxLength = Math.max(
-      sortedTanks.length,
-      sortedUpdate.length,
-      sortedNow.length
-    );
-    const result = [];
-
-    for (let i = 0; i < maxLength; i++) {
-      result.push(sortedTanks[i]);
-      result.push(sortedUpdate[i]);
-      result.push(sortedNow[i]);
-    }
-
-    return result;
-  };
-
+  // Получение комбинированных данных
   const combinedData = alternateArrays(tanks, update, now).map(
-    (item, index) => ({ ...item, key: index })
+    (item, index) => {
+      return { ...item, key: index };
+    }
   );
+
+  // Генерация колонок
+  const columns = generateColumns(showHiddenRows);
 
   return (
     <>
-      <Button onClick={toggleVisibility}>
-        {showHiddenRows ? "Скрыть строки" : "Показать строки"}
-      </Button>
       <Table
         columns={columns}
         dataSource={combinedData}
         pagination={false}
         rowKey="key"
-        rowClassName={"row-table"}
+        rowClassName="row-table"
         bordered
         size="small"
-        Column={{ hidden: true }}
-        tableLayout="auto"
-        virtual={true}
+        scroll={{ y: 300, x: "100%" }}
       />
+      <Button color="default" variant="dashed" onClick={toggleVisibility}>
+        {showHiddenRows ? "Скрыть строки" : "Показать строки"}
+      </Button>
     </>
   );
 };
 
-export default function TableRow({ session }) {
-  // Проверяем, существует ли session и update
-  if (!session.session || !session.update) {
-    return <div>Нет данных</div>; // Возвращаем сообщение, если данных нет
+// Компонент-обёртка
+export default function TableRow({ session, loading }) {
+  if (loading) {
+    return <Spin indicator={<LoadingOutlined spin />} size="large" />;
+  }
+  console.log(session);
+  if (!session.session.length || !session.update.length) {
+    return <div>Нет данных</div>;
   }
 
-  const { tanks } = session.session; // Извлекаем данные из session
-  const { tanks: updateTanks } = session.update; // Извлекаем данные из update
-  const { tanks: now } = session.now; // Извлекаем данные из update
-  if (tanks.length === 0) {
-    return;
-  }
+  const tanks = session.session;
+  const updateTanks = session.update;
+  const now = session.now;
 
-  return (
-    <>
-      <App tanks={tanks} update={updateTanks} now={now} />
-    </>
-  );
+  return <App tanks={tanks} update={updateTanks} now={now} />;
 }
+export const ClanTableRow = ({ session, loading }) => {
+  if (loading) {
+    return <Spin indicator={<LoadingOutlined spin />} size="large" />;
+  }
+
+  if (!session?.members?.length) {
+    return <div>Нет данных</div>;
+  }
+  const columns = [
+    { title: "Name", dataIndex: "nickname", minWidth: "max-content" },
+    ...Object.entries(labelMapping).map(([key, entity]) => ({
+      title: key,
+      dataIndex: ["general", "all", key],
+      minWidth: 20,
+      render: (value) => {
+        const color = getColor("Session", entity, value); // Получаем цвет на основе данных
+        return <span style={{ color: color }}>{value}</span>;
+      },
+    })),
+  ];
+  const combinedData = session.members.filter(
+    (member) => member.general.all !== null
+  );
+  return (
+    <Table
+      columns={columns}
+      dataSource={combinedData}
+      pagination={false}
+      rowKey="account_id"
+      rowClassName="row-table"
+      bordered
+      size="small"
+      scroll={{ y: 300, x: "100%" }}
+    />
+  );
+};

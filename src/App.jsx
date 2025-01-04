@@ -1,18 +1,14 @@
-import { useState } from "react";
-import {
-  Route,
-  Routes,
-  Link,
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
-import Home from "./page/Home";
-import ClanStats from "./page/Clan";
-import PlayerStatsWrapper from "./page/player";
-import ErrorPage from "./page/error";
-import Auth from "./components/auth";
-import WebhookWrapper from "./page/web_socket_player";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Home from "./page/home/home";
+import ClanStats from "./page/clan/clan";
+import PlayerStatsWrapper from "./page/player/player";
+import ErrorPage from "./page/error/error";
+import Auth from "./features/auth";
+import WebhookWrapper from "./page/player/web_socket_player";
+import axios from "axios";
 
+// Установить глобальный параметр
+axios.defaults.withCredentials = true;
 const router = createBrowserRouter(
   [
     {
@@ -24,7 +20,7 @@ const router = createBrowserRouter(
       element: <PlayerStatsWrapper key={location.pathname} />,
     },
     {
-      path: ":region/clan",
+      path: ":region/clan/:name",
       element: <ClanStats />,
     },
     {
@@ -49,11 +45,7 @@ const router = createBrowserRouter(
 );
 
 function App() {
-  return (
-    <>
-      <RouterProvider router={router} />
-    </>
-  );
+  return <>{<RouterProvider router={router} />}</>;
 }
 
 export default App;

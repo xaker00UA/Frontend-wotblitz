@@ -1,6 +1,6 @@
 import { Component } from "react";
 import React from "react";
-import Header from "../components/header";
+import Header from "../../components/header";
 
 export default class Home extends Component {
   constructor(props) {

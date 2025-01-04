@@ -1,35 +1,18 @@
-import React, { Component } from "react";
-import { Navigate, redirect } from "react-router-dom";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import Search_field from "./search";
-import axios from "axios";
 import "./header.css";
+import { useAuth, AuthProvider } from "../hooks/useAuth";
+import { reset } from "../services/api/authService";
+import { Button } from "antd";
 
-class Header extends Component {
-  constructor(props) {
-    super(props);
-  }
-  handlerOnLogin() {}
-  handlerOnLogout() {}
-  render() {
-    return (
-      <>
+const Header = () => {
+  return (
+    <>
+      <AuthProvider>
         <header className="p-3 bg-dark text-white">
           <div className="container">
             <div className="content-box">
-              <a
-                href="/"
-                className="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none"
-              >
-                <svg
-                  className="bi me-2"
-                  width="40"
-                  height="32"
-                  role="img"
-                  aria-label="Bootstrap"
-                >
-                  <use xlinkHref="#bootstrap"></use>
-                </svg>
-              </a>
               <ul className="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                 <li>
                   <a href="/" className="nav-link px-2 text-secondary">
@@ -38,17 +21,12 @@ class Header extends Component {
                 </li>
                 <li>
                   <a href="#" className="nav-link px-2 text-white">
-                    Features
+                    Players
                   </a>
                 </li>
                 <li>
                   <a href="#" className="nav-link px-2 text-white">
-                    Pricing
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="nav-link px-2 text-white">
-                    FAQs
+                    Clans
                   </a>
                 </li>
                 <li>
@@ -60,126 +38,65 @@ class Header extends Component {
             </div>
             <div className="search-and-button-box">
               <Search_field />
-              <AuthButtons />
+              <ButtonsHeader />
             </div>
           </div>
         </header>
-      </>
-    );
-  }
-}
+      </AuthProvider>
+    </>
+  );
+};
 
-class AuthButtons extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isAuthenticated: false,
-      redirectTo: null,
-    };
-  }
-
-  checkAuth = async () => {
-    // Проверяем наличие токена в куках
-    try {
-      const response = await axios.get("/api/auth/verify", {
-        withCredentials: true,
-      });
-      return response.data.isAuthenticated;
-    } catch (error) {
-      console.error(error);
+const ButtonsHeader = () => {
+  const { user, isAuthenticated, login, logout, loading } = useAuth();
+  const navigate = useNavigate();
+  const handlerProfile = () => {
+    if (user) {
+      const { nickname: user_name, region } = user;
+      const link = `/${region}/player/${user_name}`;
+      navigate(link, { replace: true });
     }
-  };
-  async componentDidMount() {
-    const isAuthenticated = await this.checkAuth();
-    this.setState({ isAuthenticated }); // Update state after authentication check
-  }
-  handlerOnLogin = async () => {
-    console.log("Login");
-    const region = "eu";
-    try {
-      const response = await axios.get(
-        `/api/login/${region}?redirect_url=${window.location.hostname}/auth`,
-        {
-          withCredentials: true,
-        }
-      );
-      window.location.href = response.data.url;
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  handlerOnLogout = async () => {
-    const response = await axios.get("/api/logout", {
-      withCredentials: true,
-    });
-
-    await this.componentDidMount();
-  };
-  handlerProfile = async () => {
-    try {
-      const response = await axios.get("/api/player", {
-        withCredentials: true,
-      });
-      const link = `/${response.data.region}/player/${response.data.nickname}`;
-      this.setState({ redirectTo: link });
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  handlerReset = () => {
-    axios.get("/api/reset", { withCredentials: true });
   };
 
-  render() {
-    if (
-      this.state.redirectTo &&
-      window.location.pathname == this.state.redirectTo
-    ) {
-      window.location.reload();
-    }
-    if (this.state.redirectTo) {
-      console.log(this.state.redirectTo);
-      return <Navigate to={this.state.redirectTo} />;
-    }
-    return (
-      <div className="text-end">
-        {this.state.isAuthenticated ? (
-          <>
-            <button
-              type="button"
-              className="btn btn-outline-light me-2"
-              onClick={this.handlerProfile}
-            >
-              Profile
-            </button>
-            <button
-              type="button"
-              className="btn btn-outline-light me-2"
-              onClick={this.handlerOnLogout}
-            >
-              Logout
-            </button>
-            <button
-              type="button"
-              className="btn btn-outline-light me-2"
-              onClick={this.handlerReset}
-            >
-              Reset Session
-            </button>
-          </>
-        ) : (
-          <>
-            <button
-              type="button"
-              className="btn btn-outline-light me-2"
-              onClick={this.handlerOnLogin}
-            >
-              Login
-            </button>
-          </>
-        )}
-      </div>
-    );
-  }
-}
+  return (
+    <div className="text-end">
+      {isAuthenticated ? (
+        <>
+          <Button
+            type="primary"
+            className="btn btn-outline-light me-2"
+            onClick={handlerProfile}
+          >
+            Profile
+          </Button>
+          <Button
+            type="primary"
+            className="btn btn-outline-light me-2"
+            onClick={logout}
+          >
+            Logout
+          </Button>
+          <Button
+            type="primary"
+            className="btn btn-outline-light me-2"
+            onClick={reset}
+          >
+            Reset Session
+          </Button>
+        </>
+      ) : (
+        <>
+          <Button
+            type="primary"
+            className="btn btn-outline-light me-2"
+            onClick={login}
+          >
+            Login
+          </Button>
+        </>
+      )}
+    </div>
+  );
+};
+
 export default Header;
