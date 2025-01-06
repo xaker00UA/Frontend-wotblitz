@@ -64,7 +64,7 @@ const Search = () => {
               {
                 label: newValue,
                 player: false,
-                value: newValue,
+                value: newValue.toUpperCase(),
                 region: reg.value,
                 key: "one-clan-" + newValue,
               },
@@ -98,9 +98,9 @@ const Search = () => {
         onSearch={handleSearch} // Поиск по введенному значению
         onChange={handleChange} // Обработчик при изменении
         notFoundContent="Игрок не найден"
-        options={data}
         allowClear={false}
         loading={false}
+        options={data}
       ></Select>
       <Select_Region setRegion={setRegion} region={reg} />
     </>
