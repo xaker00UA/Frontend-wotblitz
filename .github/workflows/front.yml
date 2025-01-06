@@ -9,9 +9,8 @@ on:
       - '*'
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -20,19 +19,7 @@ jobs:
         run: |
           npm install
           npm run build
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v3
-        with:
-            name: build-artifacts
-            path: dist/
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    
 
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.5.3
