@@ -37,4 +37,4 @@ jobs:
             DEPLOY_DIR=latest-frontend
           fi
 
-          scp -r dist/* ec2-user@${{ secrets.EC2_HOST }}:/path/to/$DEPLOY_DIR
+          scp -r dist/* ec2-user@${{ secrets.EC2_HOST }}:/app/$DEPLOY_DIR
