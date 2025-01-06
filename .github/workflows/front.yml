@@ -1,6 +1,7 @@
 name: Build and Deploy Frontend
 
 on:
+  workflow_dispatch: # Позволяет запускать вручную
   push:
     branches:
       - main
