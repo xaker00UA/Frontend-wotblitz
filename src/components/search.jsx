@@ -1,8 +1,8 @@
 import React, { useState, Component, useRef, useEffect } from "react";
 import { Select } from "antd";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { player_search } from "../services/api/playerService";
-
+import { clan_search } from "../services/api/clanService";
 const Select_Region = ({ setRegion, region }) => {
   const data = [
     { label: "EU", value: "eu" },
@@ -41,36 +41,67 @@ const Search = () => {
     timeout.current = setTimeout(async () => {
       if (newValue) {
         const data = await player_search(newValue); // Запрос к серверу
+        const clans = await clan_search(newValue);
         setData([
-          { label: newValue, value: newValue, region: reg.value },
-          ...data,
+          {
+            label: <span>player</span>,
+            title: "player",
+            options: [
+              {
+                label: newValue,
+                player: true,
+                value: newValue,
+                region: reg.value,
+                key: "one-player-" + newValue,
+              },
+              ...data,
+            ],
+          },
+          {
+            label: <span>clan</span>,
+            title: "clan",
+            options: [
+              {
+                label: newValue,
+                player: false,
+                value: newValue,
+                region: reg.value,
+                key: "one-clan-" + newValue,
+              },
+              ...clans,
+            ],
+          },
         ]); // Обновляем данные в state
       }
-    }, 1000); // Задержка 1 секунда для поиска
+    }, 500);
   };
 
   // Обработчик для выбора значения
   const handleChange = (value, option) => {
+    const { player } = option;
     const { region } = option;
     setData([]); // Очищаем данные
-    navigate(`/${region}/player/${value}`); // Переходим по URL
+    if (player) {
+      navigate(`/${region}/player/${value}`); // Переходим по URL
+    } else {
+      navigate(`/${region}/clan/${value}`); // Переходим по URL
+    }
   };
-
   return (
     <>
       <Select
         showSearch
-        autoClearSearchValue={true}
-        placeholder={"Введите ник"}
+        autoClearSearchValue={false}
+        placeholder={"Введите ник или название клана"}
         defaultActiveFirstOption={true}
-        filterOption={true}
+        filterOption={false}
         onSearch={handleSearch} // Поиск по введенному значению
         onChange={handleChange} // Обработчик при изменении
         notFoundContent="Игрок не найден"
         options={data}
         allowClear={false}
         loading={false}
-      />
+      ></Select>
       <Select_Region setRegion={setRegion} region={reg} />
     </>
   );

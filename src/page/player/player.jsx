@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
 import { Button, Spin } from "antd";
 import {
   ArrowDownOutlined,
@@ -36,13 +36,12 @@ const PlayerStats = () => {
         update: Update,
         tanks,
       } = await player_session_and_update(region, name);
-      console.log(Update);
       SetSession(session.all);
       SetUpdate(Update.all);
       SetRawData(tanks);
     };
 
-    fetchData(); // Вызов асинхронной функции
+    fetchData().catch(console.error); // Вызов асинхронной функции
   }, [region, name]); // Зависимости: когда region или name изменяются
 
   const handlerWebhook = () => {
@@ -79,7 +78,6 @@ const PlayerStats = () => {
 export default PlayerStats;
 
 export function PlayerGeneral({ account, name }) {
-  console.log(account);
   if (account === false) {
     return <Spin indicator={<LoadingOutlined spin />} size="large" />;
   }
@@ -95,8 +93,8 @@ export function PlayerGeneral({ account, name }) {
   }
 
   const stats = [
-    { label: "Бои", value: account.battles, stat: "fights" },
-    { label: "Победы", value: account.winrate, stat: "wins" },
+    { label: "Бои", value: account.battles, stat: "battles" },
+    { label: "Победы", value: account.winrate, stat: "winrate" },
     { label: "Урон", value: account.damage, stat: "damage" },
     {
       label: "Точность",

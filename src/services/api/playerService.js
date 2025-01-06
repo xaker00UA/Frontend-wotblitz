@@ -32,16 +32,15 @@ export const player_session_and_update = async (region, name) => {
 export const player_search = async (name) => {
   try {
     const response = await axios.get(`/api/search?player_name=${name}`);
-    console.log(response.data);
     const options = response.data.map((user, index) => ({
       value: user.name,
       label: user.name,
       region: user.region,
-      key: index,
+      key: "player-" + user.name,
+      player: true,
     }));
     return options;
   } catch (error) {
-    console.error("Ошибка на сервере:", error);
     return [];
   }
 };

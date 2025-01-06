@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router";
 import Home from "./page/home/home";
 import ClanStats from "./page/clan/clan";
 import PlayerStatsWrapper from "./page/player/player";
@@ -38,14 +38,24 @@ const router = createBrowserRouter(
   ],
   {
     future: {
-      v7_startTransition: true,
-      v7_relativeSplatPath: true,
+      v7_fetcherPersist: true,
     },
   }
 );
 
 function App() {
-  return <>{<RouterProvider router={router} />}</>;
+  return (
+    <>
+      {
+        <RouterProvider
+          router={router}
+          future={{
+            v7_startTransition: true,
+          }}
+        />
+      }
+    </>
+  );
 }
 
 export default App;

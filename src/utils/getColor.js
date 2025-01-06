@@ -1,10 +1,10 @@
-export const getColor = (name, stat, value) => {
+export const getColor = (name = "Session", stat, value) => {
   const defaultConfig = {
-    fights: {
+    battles: {
       thresholds: [1000, 5000, 20000],
       colors: ["grey", "green", "blue", "purple"],
     },
-    wins: {
+    winrate: {
       thresholds: [50, 60, 70],
       colors: ["grey", "green", "blue", "purple"],
     },
@@ -22,7 +22,7 @@ export const getColor = (name, stat, value) => {
     },
   };
   const sessionConfig = {
-    fights: {
+    battles: {
       thresholds: [10, 20, 50, 100],
       colors: ["grey", "green", "blue", "purple"],
     },
@@ -30,8 +30,8 @@ export const getColor = (name, stat, value) => {
 
   // Специфическая конфигурация для "Update"
   const updateConfig = {
-    fights: { thresholds: [20, 50, 100], colors: ["green", "blue", "purple"] },
-    wins: { thresholds: [0, 100], colors: ["red", "green"] },
+    battles: { thresholds: [20, 50, 100], colors: ["green", "blue", "purple"] },
+    winrate: { thresholds: [0, 100], colors: ["red", "green"] },
     damage: { thresholds: [0, 100], colors: ["red", "green"] },
     accuracy: { thresholds: [0, 100], colors: ["red", "green"] },
     survival: { thresholds: [0, 100], colors: ["red", "green"] },
