@@ -1,0 +1,12 @@
+{
+    "supportsES6": true,
+    "useSingleRequestParameter": true,
+    "useSingleRequestBody": true,
+    "withSeparateModelsAndApi": true,
+    "skipOperationParam": true,
+    "skipFormModel": true,
+    "modelNamePrefix": "API",
+    "apiPackage": "service",
+    "modelPackage": "models",
+    "operationIdNaming": "original"
+}
