@@ -6,6 +6,11 @@ import Auth from "./page/auth/auth";
 import { AuthProvider } from "./hooks/AuthContext";
 import Profile from "./page/profile/Profile";
 import Player from "./page/player/Player";
+import TopPlayersPage from "./page/topPlayers/TopPlayers";
+import TopClanPage from "./page/topClans/TopClans";
+import ClanPage from "./page/clan/ClanPage";
+import AdminLogin from "./page/admin/LoginAdmin";
+import AdminPanel from "./page/admin/AdminPanel";
 
 export const router = createBrowserRouter([
   {
@@ -20,16 +25,17 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <App /> },
       { path: ":region/player/:nickname", element: <Player /> },
-      { path: ":region/clan/:name", element: <div>clan</div> },
+      { path: ":region/clan/:name", element: <ClanPage /> },
       { path: "profile", element: <Profile /> },
-      { path: "players", element: <div>players</div> },
-      { path: "clans", element: <div>clans</div> },
+      { path: "players", element: <TopPlayersPage /> },
+      { path: "clans", element: <TopClanPage /> },
       { path: "auth", element: <Auth /> },
+      { path: "about", element: <div>About</div> },
       {
         path: "admin",
         children: [
-          { index: true, element: <div>admin</div> },
-          { path: "login", element: <div>login</div> },
+          { index: true, element: <AdminPanel /> },
+          { path: "login", element: <AdminLogin /> },
         ],
       },
       { path: "*", element: <div>404</div> },

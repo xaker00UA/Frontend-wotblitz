@@ -39,6 +39,7 @@ models/apisession.ts
 models/apistatistics.ts
 models/apistats-tank.ts
 models/apitime.ts
+models/apitop-player.ts
 models/apiupdate.ts
 models/index.ts
 service/admin-api.ts

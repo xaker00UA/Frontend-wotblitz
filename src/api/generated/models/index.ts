@@ -31,4 +31,5 @@ export * from './apisession';
 export * from './apistatistics';
 export * from './apistats-tank';
 export * from './apitime';
+export * from './apitop-player';
 export * from './apiupdate';

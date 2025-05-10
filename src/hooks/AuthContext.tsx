@@ -2,7 +2,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { AuthApiFp, PlayerApiFp } from "../api/generated/api";
 import { APIRegion, APIRestUserDB } from "../api/generated";
-import { useNavigate } from "react-router";
+import { useAsyncError, useNavigate } from "react-router";
 type AuthContextType = {
   isAuthenticated: boolean;
   user: APIRestUserDB | null;
@@ -10,6 +10,7 @@ type AuthContextType = {
   login: (region: APIRegion) => Promise<any>;
   logout: () => Promise<any>;
   reset: () => Promise<any>;
+  isLoading: boolean;
 };
 
 const AuthContext = createContext<AuthContextType>({
@@ -19,6 +20,7 @@ const AuthContext = createContext<AuthContextType>({
   login: async () => {},
   logout: async () => {},
   reset: async () => {},
+  isLoading: true,
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -26,6 +28,7 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<APIRestUserDB | null>(null);
   const [isAuthenticated, setIsAuth] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
   const login = async (region: APIRegion) => {
@@ -92,6 +95,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setUser(null);
       setIsAuth(false);
     } finally {
+      setIsLoading(false);
     }
   };
 
@@ -101,7 +105,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, user, login, logout, profile, reset }}
+      value={{
+        isAuthenticated,
+        user,
+        login,
+        logout,
+        profile,
+        reset,
+        isLoading,
+      }}
     >
       {children}
     </AuthContext.Provider>

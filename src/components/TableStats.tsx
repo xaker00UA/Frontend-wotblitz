@@ -4,6 +4,7 @@ import {
   TableBody,
   TableHead,
   TableRow,
+  TableSortLabel,
   Paper,
 } from "@mui/material";
 import {
@@ -12,6 +13,7 @@ import {
   APIRestStatsTank,
 } from "../api/generated";
 import { getColor, StatKey } from "../helper/GetColor";
+import { useState } from "react";
 interface Props {
   stats: APIGeneralTanks | APIRestClan | null;
 }
@@ -37,7 +39,6 @@ const isPlayer = (stats: any): stats is APIGeneralTanks => {
 const isClan = (stats: any): stats is APIRestClan => {
   return stats && "tag" in stats;
 };
-
 export default function TableStats({ stats }: Props) {
   if (stats === null) return null;
 
@@ -65,18 +66,51 @@ export default function TableStats({ stats }: Props) {
     }));
   }
 
+  // Состояния для сортировки
+  const [sortColumn, setSortColumn] = useState<keyof ColumnData>("name");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+
+  // Функция для сортировки
+  const handleSort = (column: keyof ColumnData) => {
+    const isAsc = sortColumn === column && sortOrder === "asc";
+    setSortOrder(isAsc ? "desc" : "asc");
+    setSortColumn(column);
+  };
+
+  // Функция для сортировки данных
+  const sortedData = [...data].sort((a, b) => {
+    const aValue = a[sortColumn];
+    const bValue = b[sortColumn];
+    if (aValue === bValue) return 0;
+
+    const compareValue =
+      typeof aValue === "number" && typeof bValue === "number"
+        ? aValue - bValue
+        : String(aValue).localeCompare(String(bValue));
+
+    return sortOrder === "asc" ? compareValue : -compareValue;
+  });
+
   return (
     <Paper sx={{ border: "1px solid", borderColor: "divider" }}>
       <Table>
         <TableHead>
           <TableRow>
             {columnHeaders.map((col) => (
-              <TableCell key={col.key}>{col.label}</TableCell>
+              <TableCell key={col.key}>
+                <TableSortLabel
+                  active={sortColumn === col.key}
+                  direction={sortColumn === col.key ? sortOrder : "asc"}
+                  onClick={() => handleSort(col.key)}
+                >
+                  {col.label}
+                </TableSortLabel>
+              </TableCell>
             ))}
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.map((row, idx) => (
+          {sortedData.map((row, idx) => (
             <TableRow key={idx}>
               {columnHeaders.map((col) => (
                 <TableCell

@@ -2,26 +2,47 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/AuthContext";
 import PlayerStack from "../../components/Player";
+import { StatsProvider, useStats } from "../../hooks/StatsContext";
+import PrivateInfo from "../../components/PrivateStats";
+import { Box } from "@mui/system";
 
 export default function Profile() {
   const navigate = useNavigate();
-  //   const [loading, setLoading] = useState(true);
-  //   const [error, setError] = useState<string[] | null>(null);
-  //   const [general, setGeneral] = useState<APIRestUser | null>(null);
-  //   const [details, setDetails] = useState<APIRestUser | null>(null);
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
 
   useEffect(() => {
-    if (!user) {
+    if (!isLoading && !user) {
       navigate("/");
       return;
     }
-  }, [user, navigate]);
+  }, [user, isLoading, navigate]);
+
+  return (
+    <>
+      <StatsProvider>
+        <ProfileContext />
+      </StatsProvider>
+    </>
+  );
+}
+
+function ProfileContext() {
+  const { generalData, detailsData } = useStats();
+  const { user } = useAuth();
   if (user) {
     return (
       <>
-        <PlayerStack nickname={user?.name} region={user?.region} />
+        <Box sx={{ display: "flex", flexDirection: "column" }}>
+          <PrivateInfo
+            info={{
+              now: generalData?.private ?? null,
+              update: detailsData?.private ?? null,
+            }}
+          />
+          <PlayerStack nickname={user?.name} region={user?.region} />
+        </Box>
       </>
     );
   }
+  return null;
 }

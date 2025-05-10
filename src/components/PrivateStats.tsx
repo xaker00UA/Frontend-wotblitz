@@ -3,36 +3,37 @@ import styled from "styled-components";
 import Gold_img from "../assets/gold.png";
 import Credits from "../assets/credits.png";
 import Free_xp from "../assets/free_xp.png";
-
+import { APIRestPrivate } from "../api/generated";
 // Типы для данных info
-interface ResourceData {
-  gold: number;
-  credits: number;
-  free_xp: number;
-}
+// interface APIRestPrivate {
+//   gold: number;
+//   credits: number;
+//   free_xp: number;
+// }
 
-interface UpdateData {
-  gold?: number;
-  credits?: number;
-  free_xp?: number;
-}
+// interface UpdateData {
+//   gold?: number;
+//   credits?: number;
+//   free_xp?: number;
+// }
 
 interface PrivateInfoProps {
   info: {
-    now: ResourceData | null;
-    update?: UpdateData;
-  } | null;
+    now: APIRestPrivate | null;
+    update: APIRestPrivate | null;
+  };
 }
 
 // Стилизация компонентов
 const ResourceWrapper = styled.div`
+  margin-top: 20px;
   display: grid;
   align-self: end;
   grid-template-rows: repeat(3, auto); /* Два ряда с высотой под контент */
   grid-template-columns: repeat(2, 1fr); /* Три равные колонки */
   align-items: start; /* Выравнивание контента по вертикали */
   justify-items: start; /* Выравнивание контента по горизонтали */
-  background: #f5f5f5;
+  /* background: #f5f5f5; */
   border: 1px solid #dcdcdc;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -46,7 +47,7 @@ const ResourceRow = styled.div`
 `;
 
 const ResourceValue = styled.span`
-  color: #333;
+  /* color: #333; */
   font-weight: bold;
 `;
 
@@ -67,7 +68,7 @@ const PrivateInfo: React.FC<PrivateInfoProps> = ({ info }) => {
     return null;
   }
 
-  const { gold, credits, free_xp } = info.now;
+  const { gold = 0, credits = 0, free_xp = 0 } = info.now ?? {};
   const update_gold = info.update?.gold || 0;
   const update_credits = info.update?.credits || 0;
   const update_free_xp = info.update?.free_xp || 0;

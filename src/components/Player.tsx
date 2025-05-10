@@ -9,6 +9,7 @@ import GridTanks from "./GridTanks";
 import { transformTankData } from "../helper/TransformType";
 import { Timer } from "./Timer";
 import { useError } from "../hooks/ErrorContext";
+import { useStats } from "../hooks/StatsContext";
 
 type Props = {
   region: string;
@@ -20,7 +21,7 @@ export default function PlayerStack({ region, nickname }: Props) {
   const [details, setDetails] = useState<APIRestUser | null>(null);
   const [generalLoading, setGenLoading] = useState<boolean>(true);
   const [detailsLoading, setDetLoading] = useState<boolean>(true);
-
+  const { setGeneralData, setDetailsData } = useStats();
   const addError = useError();
   useEffect(() => {
     if (!region || !nickname) return;
@@ -32,6 +33,7 @@ export default function PlayerStack({ region, nickname }: Props) {
         );
         const data = await request();
         setGeneral(data.data);
+        setGeneralData(data.data);
       } catch (err) {
         setGeneral(null);
 
@@ -51,9 +53,9 @@ export default function PlayerStack({ region, nickname }: Props) {
         );
         const data = await request();
         setDetails(data.data);
+        setDetailsData(data.data);
       } catch (err) {
         setDetails(null);
-
         const error = err as AxiosError<any>;
         const messages = error.response?.data?.detail ?? "detael";
         addError(messages);

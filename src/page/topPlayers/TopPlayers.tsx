@@ -1,15 +1,19 @@
 import { useState, useEffect } from "react";
-import { PlayerApiFp, APIParameter } from "../../api/generated";
+import { PlayerApiFp, APIParameter, APITopPlayer } from "../../api/generated";
 import TopListPlayers from "../../components/TopListPlayers";
 
-export default function Players() {
+export default function TopPlayersPage() {
   const api = PlayerApiFp();
 
-  const [data, setData] = useState<string[] | null[]>([null, null, null]);
+  const [data, setData] = useState<(APITopPlayer[] | null)[]>([
+    null,
+    null,
+    null,
+  ]);
 
   const [limit, setLimit] = useState<number>(10);
   const [startDay, setDay] = useState<number>(
-    Date.now() / 1000 - 60 * 60 * 24 * 7
+    Math.floor(Date.now() / 1000 - 60 * 60 * 24 * 7)
   );
 
   const parameters: APIParameter[] = [
@@ -20,7 +24,12 @@ export default function Players() {
 
   const request = async (parameter: APIParameter) => {
     try {
-      return await api.topPlayersTopPlayersGet(limit, parameter, startDay);
+      const request = await api.topPlayersTopPlayersGet(
+        limit,
+        parameter,
+        startDay
+      );
+      return (await request()).data;
     } catch {
       return null;
     }
@@ -32,6 +41,9 @@ export default function Players() {
     );
     setData(responses);
   };
+  useEffect(() => {
+    fetchData();
+  }, [startDay, limit]);
 
   return <TopListPlayers battles={data[0]} wins={data[1]} damage={data[2]} />;
 }

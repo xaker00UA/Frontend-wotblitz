@@ -9,8 +9,9 @@ import {
   Typography,
   styled,
   Link,
+  Box,
 } from "@mui/material";
-import { APITopPlayer } from "../api/generated";
+import { APIClanTop } from "../api/generated";
 
 const FlexBox = styled("div")`
   display: flex;
@@ -52,33 +53,19 @@ const StyledListItem = styled(ListItem)`
 `;
 
 interface Props {
-  battles: APITopPlayer[] | null;
-  wins: APITopPlayer[] | null;
-  damage: APITopPlayer[] | null;
+  data: APIClanTop[] | null;
 }
 
-const TopListPlayers = ({ battles, wins, damage }: Props) => {
-  if (!battles || !wins || !damage) return null;
-
-  const tooltipText = "Учитываются только игроки с более чем 20 боями";
+const TopClanList = ({ data }: Props) => {
+  if (!data) return null;
 
   return (
     <>
       <Typography variant="h4" align="center" sx={{ mt: 4 }}>
-        Топ игроков недели
+        Топ кланов недели
       </Typography>
       <FlexBox>
-        <CategoryCard title="Топ по боям" data={battles} />
-        <CategoryCard
-          title="Топ по победам"
-          data={wins}
-          tooltip={tooltipText}
-        />
-        <CategoryCard
-          title="Топ по урону"
-          data={damage}
-          tooltip={tooltipText}
-        />
+        <CategoryCard title="Топ основан на рейтинге" data={data} />
       </FlexBox>
     </>
   );
@@ -86,36 +73,55 @@ const TopListPlayers = ({ battles, wins, damage }: Props) => {
 
 interface CategoryCardProps {
   title: string;
-  data: APITopPlayer[];
-  tooltip?: string;
+  data: APIClanTop[];
 }
 
-const CategoryCard: React.FC<CategoryCardProps> = ({
-  title,
-  data,
-  tooltip,
-}) => {
+const CategoryCard: React.FC<CategoryCardProps> = ({ title, data }) => {
   const navigate = useNavigate();
 
   return (
-    <Tooltip title={tooltip ?? ""} placement="top">
+    <Tooltip title={"asda"} placement="top">
       <StyledCard>
         <CardContent>
           <Typography variant="h6" gutterBottom>
             {title}
           </Typography>
+
+          {/* Заголовки для колонок */}
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              px: 2,
+              mb: 1,
+              fontWeight: "bold",
+              color: "text.secondary",
+            }}
+          >
+            <Box sx={{ flex: 2 }}>Клан</Box>
+            <Box sx={{ flex: 1, textAlign: "right" }}>Рейтинг</Box>
+            <Box sx={{ flex: 1, textAlign: "right" }}>Бои</Box>
+            <Box sx={{ flex: 1, textAlign: "right" }}>Победы %</Box>
+            <Box sx={{ flex: 1, textAlign: "right" }}>Урон</Box>
+          </Box>
+
           <List disablePadding>
             {data.slice(0, 10).map((item) => {
-              const playerUrl = `/${item.region}/player/${item.name}`;
+              const clanUrl = `/${item.region}/clan/${item.tag}`;
               return (
                 <StyledListItem
-                  key={`${item.region}-${item.player_id}`}
-                  onClick={() => navigate(playerUrl)}
+                  key={`${item.region}-${item.clan_id}`}
+                  onClick={() => navigate(clanUrl)}
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
                 >
                   <ListItemText
                     primary={
                       <Link
-                        href={playerUrl}
+                        href={clanUrl}
                         onClick={(e) => e.stopPropagation()}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -125,8 +131,20 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
                         {item.name}
                       </Link>
                     }
+                    sx={{ flex: 2 }}
                   />
-                  <span>{item.value}</span>
+                  <span style={{ flex: 1, textAlign: "right" }}>
+                    {item.rating}
+                  </span>
+                  <span style={{ flex: 1, textAlign: "right" }}>
+                    {item.general_battles}
+                  </span>
+                  <span style={{ flex: 1, textAlign: "right" }}>
+                    {item.general_wins}
+                  </span>
+                  <span style={{ flex: 1, textAlign: "right" }}>
+                    {item.averageDamage}
+                  </span>
                 </StyledListItem>
               );
             })}
@@ -137,4 +155,4 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
   );
 };
 
-export default TopListPlayers;
+export default TopClanList;
