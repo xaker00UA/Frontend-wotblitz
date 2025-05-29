@@ -21,7 +21,6 @@ const FlexBox = styled("div")`
 `;
 
 const StyledCard = styled(Card)`
-  /* width: 300px; */
   flex: 1;
   text-align: center;
   border-radius: 20px;

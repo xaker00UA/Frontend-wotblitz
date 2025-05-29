@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { PlayerApiFp, APIParameter, APITopPlayer } from "../../api/generated";
 import TopListPlayers from "../../components/TopListPlayers";
+import { Box } from "@mui/material";
 
 export default function TopPlayersPage() {
   const api = PlayerApiFp();
@@ -45,5 +46,9 @@ export default function TopPlayersPage() {
     fetchData();
   }, [startDay, limit]);
 
-  return <TopListPlayers battles={data[0]} wins={data[1]} damage={data[2]} />;
+  return (
+    <>
+      <TopListPlayers battles={data[0]} wins={data[1]} damage={data[2]} />
+    </>
+  );
 }

@@ -1,21 +1,9 @@
 import React from "react";
-import styled from "styled-components";
+import { styled } from "@mui/material";
 import Gold_img from "../assets/gold.png";
 import Credits from "../assets/credits.png";
 import Free_xp from "../assets/free_xp.png";
 import { APIRestPrivate } from "../api/generated";
-// Типы для данных info
-// interface APIRestPrivate {
-//   gold: number;
-//   credits: number;
-//   free_xp: number;
-// }
-
-// interface UpdateData {
-//   gold?: number;
-//   credits?: number;
-//   free_xp?: number;
-// }
 
 interface PrivateInfoProps {
   info: {
@@ -25,43 +13,49 @@ interface PrivateInfoProps {
 }
 
 // Стилизация компонентов
-const ResourceWrapper = styled.div`
-  margin-top: 20px;
-  display: grid;
-  align-self: end;
-  grid-template-rows: repeat(3, auto); /* Два ряда с высотой под контент */
-  grid-template-columns: repeat(2, 1fr); /* Три равные колонки */
-  align-items: start; /* Выравнивание контента по вертикали */
-  justify-items: start; /* Выравнивание контента по горизонтали */
-  /* background: #f5f5f5; */
-  border: 1px solid #dcdcdc;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-`;
+const ResourceWrapper = styled("div")(({ theme }) => ({
+  marginTop: 20,
+  display: "grid",
+  alignSelf: "end",
+  gridTemplateRows: "repeat(3, auto)",
+  gridTemplateColumns: "repeat(2, 1fr)",
+  alignItems: "start",
+  justifyItems: "start",
+  backgroundColor: theme.palette.background.paper,
+  border: "1px solid #dcdcdc",
+  borderRadius: 8,
+  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+}));
 
-const ResourceRow = styled.div`
-  display: flex;
-  align-items: center;
-  font-size: 14px;
-  height: 24px;
-`;
+const ResourceRow = styled("div")(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  fontSize: 14,
+  height: 24,
+}));
 
-const ResourceValue = styled.span`
-  /* color: #333; */
-  font-weight: bold;
-`;
+const ResourceValue = styled("span")(({ theme }) => ({
+  fontWeight: "bold",
+  color: theme.palette.text.primary,
+}));
 
-const ResourceUpdate = styled.span<{ value: number }>`
-  margin-left: 10px;
-  color: ${(props) =>
-    props.value > 0 ? "green" : props.value < 0 ? "red" : "#888"};
-`;
+const ResourceUpdate = styled("span", {
+  shouldForwardProp: (prop) => prop !== "value",
+})<{ value: number }>(({ value, theme }) => ({
+  marginLeft: 10,
+  color:
+    value > 0
+      ? theme.palette.success.main
+      : value < 0
+      ? theme.palette.error.main
+      : theme.palette.grey[600],
+}));
 
-const IconImage = styled.img`
-  width: 20px;
-  height: 24px;
-  margin-right: 5px;
-`;
+const IconImage = styled("img")(() => ({
+  width: 20,
+  height: 24,
+  marginRight: 5,
+}));
 
 const PrivateInfo: React.FC<PrivateInfoProps> = ({ info }) => {
   if (!info || !info.now) {

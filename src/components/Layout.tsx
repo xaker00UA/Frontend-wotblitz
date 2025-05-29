@@ -5,14 +5,16 @@ import { ErrorSnackbar } from "./ErrorSnackbar";
 
 export default function Layout() {
   return (
-    <Box display="flex" flexDirection="column" minHeight="100vh">
-      <Box flexShrink={0}>
-        <Header />
-      </Box>
-      <Box flexGrow={1}>
+    <>
+      <Header /> {/* sticky должен работать тут, без обёртки с overflow */}
+      {/* <Box
+        sx={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}
+      > */}
+      <Box sx={{ width: "100%" }}>
         <Outlet />
       </Box>
       <ErrorSnackbar />
-    </Box>
+      {/* </Box> */}
+    </>
   );
 }

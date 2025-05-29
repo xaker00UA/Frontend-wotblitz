@@ -6,14 +6,18 @@ import {
   TableRow,
   TableSortLabel,
   Paper,
+  TableContainer,
 } from "@mui/material";
+import TableFooter from "@mui/material/TableFooter";
 import {
+  APIBaseStats,
   APIGeneralTanks,
   APIRestClan,
   APIRestStatsTank,
 } from "../api/generated";
 import { getColor, StatKey } from "../helper/GetColor";
 import { useState } from "react";
+import { fontSize, fontStyle } from "@mui/system";
 interface Props {
   stats: APIGeneralTanks | APIRestClan | null;
 }
@@ -47,12 +51,14 @@ export default function TableStats({ stats }: Props) {
   if (isClan(stats)) {
     if (stats.members.length === 0) return null;
 
-    data.push({ name: "general", ...stats.general });
+    // data.push({ name: "general", ...stats.general });
 
-    const memberData = stats.members.map((member) => ({
-      name: member.nickname,
-      ...member.general?.all,
-    }));
+    const memberData = stats.members
+      .filter((member) => member.general?.all != null)
+      .map((member) => ({
+        name: member.nickname,
+        ...member.general?.all,
+      }));
 
     data.push(...memberData);
   }
@@ -67,7 +73,7 @@ export default function TableStats({ stats }: Props) {
   }
 
   // Состояния для сортировки
-  const [sortColumn, setSortColumn] = useState<keyof ColumnData>("name");
+  const [sortColumn, setSortColumn] = useState<keyof ColumnData>("battles");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
   // Функция для сортировки
@@ -92,7 +98,9 @@ export default function TableStats({ stats }: Props) {
   });
 
   return (
-    <Paper sx={{ border: "1px solid", borderColor: "divider" }}>
+    <TableContainer
+      sx={{ bgcolor: "background.paper", border: 1, borderColor: "divider" }}
+    >
       <Table>
         <TableHead>
           <TableRow>
@@ -109,7 +117,7 @@ export default function TableStats({ stats }: Props) {
             ))}
           </TableRow>
         </TableHead>
-        <TableBody>
+        <TableBody sx={{ fontSize: "12px" }}>
           {sortedData.map((row, idx) => (
             <TableRow key={idx}>
               {columnHeaders.map((col) => (
@@ -129,7 +137,44 @@ export default function TableStats({ stats }: Props) {
             </TableRow>
           ))}
         </TableBody>
+        {isClan(stats) ? (
+          <TableFooter>
+            <TableRow sx={{ color: "gray" }}>
+              <TableCell
+                component="td"
+                sx={{ typography: "body2", color: " grey " }}
+                key="general"
+              >
+                general
+              </TableCell>
+              {columnHeaders
+                .filter((col) => col.key != "name")
+                .map((col) => {
+                  const key = col.key as keyof APIBaseStats;
+                  return (
+                    <TableCell
+                      component="td"
+                      sx={{
+                        typography: "body2",
+                        color: getColor(
+                          undefined,
+                          key as StatKey,
+                          Number(stats.general[key]) // Проверяем, существует ли значение
+                        ),
+                      }}
+                      key={key}
+                    >
+                      {stats.general?.[key] !== undefined
+                        ? String(stats.general[key])
+                        : "-"}
+                    </TableCell>
+                  );
+                })}
+            </TableRow>
+          </TableFooter>
+        ) : null}{" "}
+        {/* Используем null вместо пустого фрагмента */}
       </Table>
-    </Paper>
+    </TableContainer>
   );
 }

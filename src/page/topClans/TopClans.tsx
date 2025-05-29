@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { ClanApiFp, APIClanTop } from "../../api/generated";
 import TopClanList from "../../components/TopListClans";
+import { Box } from "@mui/material";
 
 export default function TopClanPage() {
   const api = ClanApiFp();
@@ -33,5 +34,9 @@ export default function TopClanPage() {
     fetchData();
   }, [startDay, limit]);
 
-  return <TopClanList data={data} />;
+  return (
+    <Box sx={{ width: "100%" }}>
+      <TopClanList data={data} />
+    </Box>
+  );
 }

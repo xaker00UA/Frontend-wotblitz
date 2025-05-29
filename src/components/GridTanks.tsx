@@ -11,8 +11,9 @@ import {
   MenuItem,
 } from "@mui/material";
 import Grid from "@mui/material/Grid";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect, useCallback } from "react";
 import { APIItemTank, APIRestStatsTank } from "../api/generated";
+import React from "react";
 type TankStats = Pick<
   APIRestStatsTank,
   "battles" | "winrate" | "damage" | "accuracy" | "survival"
@@ -34,6 +35,27 @@ export default function TankGrid({ tanks }: Props) {
 
   const [levelFilter, setLevelFilter] = useState<string>("all");
   const [sortKey, setSortKey] = useState<keyof TankStats | "">("");
+
+  const [visibleTanks, setVisibleTanks] = useState(20);
+  const observer = useRef<IntersectionObserver | null>(null);
+
+  // Колбэк для последнего элемента
+  const lastElementRef = useCallback((node: HTMLDivElement | null) => {
+    if (observer.current) observer.current.disconnect(); // отключаем предыдущий
+
+    observer.current = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setVisibleTanks((prev) => prev + 20);
+        }
+      },
+      {
+        rootMargin: "100px",
+      }
+    );
+
+    if (node) observer.current.observe(node); // подключаем новый
+  }, []);
 
   const filteredTanks = useMemo(() => {
     let result = tanks;
@@ -65,7 +87,7 @@ export default function TankGrid({ tanks }: Props) {
   }, [tanks]);
 
   return (
-    <Box sx={{ p: 2 }}>
+    <Box key="start" sx={{ p: 2 }}>
       <Box sx={{ mb: 2, display: "flex", gap: 2, flexWrap: "wrap" }}>
         <FormControl size="small">
           <InputLabel>Уровень</InputLabel>
@@ -86,7 +108,7 @@ export default function TankGrid({ tanks }: Props) {
         <FormControl size="small">
           <InputLabel>Сортировка</InputLabel>
           <Select
-            value="Без сортировки"
+            defaultValue="Без сортировки"
             label="Сортировка"
             onChange={(e) => setSortKey(e.target.value as any)}
           >
@@ -100,9 +122,13 @@ export default function TankGrid({ tanks }: Props) {
         </FormControl>
       </Box>
 
-      <Grid container spacing={2} columns={6}>
-        {filteredTanks.map((tank) => (
-          <Grid size={{ lg: 1, sm: 3, md: 2 }} key={tank.tank_id}>
+      <Grid container spacing={2}>
+        {filteredTanks.slice(0, visibleTanks).map((tank, index) => (
+          <Grid
+            size={{ lg: 2, sm: 4, md: 3, xs: 6 }}
+            ref={index === visibleTanks - 1 ? lastElementRef : null}
+            key={tank.tank_id}
+          >
             <Card
               sx={{
                 height: "100%",
@@ -190,7 +216,7 @@ export default function TankGrid({ tanks }: Props) {
               </CardContent>
             </Card>
           </Grid>
-        ))}
+        ))}{" "}
       </Grid>
     </Box>
   );

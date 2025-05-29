@@ -24,10 +24,10 @@ export default function Auth() {
         accountId
       );
       const response = await request();
-      navigate(`/${response.data.region}/player/${response.data.name}`);
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+      navigate(`/profile`);
     } catch (e) {
       console.error("Ошибка при обработке запроса auth:", e);
-      // navigate("/");
     }
   };
 

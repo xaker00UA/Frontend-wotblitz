@@ -157,13 +157,23 @@ export default function Search() {
                     <SearchIcon />
                   </InputAdornment>
                 ),
+                sx: {
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    border: "none", // Убираем обводку
+                  },
+                },
               },
             }}
             {...params}
             placeholder="Введите имя игрока или клана"
           />
         )}
-        sx={{ m: 0, width: "300px", height: "100%" }}
+        sx={{
+          m: 0,
+          p: 0,
+          minWidth: "250px",
+          height: "100%",
+        }}
         noOptionsText="Нет данных"
         groupBy={(option) => option.group}
         renderGroup={(params) => (

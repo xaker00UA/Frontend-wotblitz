@@ -34,8 +34,17 @@ export default function MultipleSelect({
 }) {
   const theme = useTheme();
   return (
-    <FormControl sx={{ m: 0, height: "100%", width: 100 }}>
-      <Select value={value} onChange={onChange} MenuProps={MenuProps}>
+    <FormControl sx={{ m: 0, p: 0, height: "100%", flexGrow: 0, width: 70 }}>
+      <Select
+        value={value}
+        sx={{
+          "& .MuiOutlinedInput-notchedOutline": {
+            border: "none", // Убираем обводку
+          },
+        }}
+        onChange={onChange}
+        MenuProps={MenuProps}
+      >
         {names.map((key) => (
           <MenuItem
             key={key[0]}

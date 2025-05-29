@@ -1,6 +1,5 @@
 // routes.tsx
 import { createBrowserRouter } from "react-router-dom";
-import App from "./App";
 import Layout from "./components/Layout";
 import Auth from "./page/auth/auth";
 import { AuthProvider } from "./hooks/AuthContext";
@@ -11,6 +10,7 @@ import TopClanPage from "./page/topClans/TopClans";
 import ClanPage from "./page/clan/ClanPage";
 import AdminLogin from "./page/admin/LoginAdmin";
 import AdminPanel from "./page/admin/AdminPanel";
+import HomePage from "./page/home/Home";
 
 export const router = createBrowserRouter([
   {
@@ -23,7 +23,7 @@ export const router = createBrowserRouter([
       </>
     ),
     children: [
-      { index: true, element: <App /> },
+      { index: true, element: <HomePage /> },
       { path: ":region/player/:nickname", element: <Player /> },
       { path: ":region/clan/:name", element: <ClanPage /> },
       { path: "profile", element: <Profile /> },

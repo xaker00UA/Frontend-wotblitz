@@ -6,14 +6,14 @@ import {
   Divider,
   Paper,
 } from "@mui/material";
-import { APIRestStatsTank } from "../api/generated";
+import { APIRestRating, APIRestStatsTank } from "../api/generated";
 import { getColor, StatKey } from "../helper/GetColor";
 import StraightIcon from "@mui/icons-material/Straight";
 import { useError } from "../hooks/ErrorContext";
 
 interface PlayerGeneralProps {
   isLoading: boolean;
-  account: APIRestStatsTank | null;
+  account: APIRestStatsTank | APIRestRating | null;
   name: string | null;
 }
 
@@ -38,7 +38,6 @@ const PlayerGeneral: React.FC<PlayerGeneralProps> = ({
 
   if (!account || !name || account.battles === 0) {
     useEffect(() => {
-      console.log("useEfferct");
       addError("Сыграйте один бой в рандоме чтобы увидеть результат");
     }, [account]);
 
@@ -72,7 +71,11 @@ const PlayerGeneral: React.FC<PlayerGeneralProps> = ({
   };
 
   return (
-    <Paper sx={{ flex: 1 }} elevation={10}>
+    <Paper
+      sx={{ bgcolor: "background.paper", backgroundImage: "none", flex: 1 }}
+      elevation={10}
+    >
+      {/* // <Paper sx={{ bgcolor: "green", flex: 1 }} elevation={10}> */}
       <Box p={5}>
         <Typography align="center" variant="h4">
           {name}

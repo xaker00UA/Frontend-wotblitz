@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import {
   createTheme,
   ThemeProvider as MuiThemeProvider,
@@ -26,11 +26,29 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.setItem("theme", newMode);
   };
 
-  const theme = createTheme({ palette: { mode } });
+  const theme = useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode,
+          ...(mode === "dark"
+            ? {
+                background: {
+                  default: "#000000",
+                  paper: "#121212",
+                },
+              }
+            : {}),
+        },
+      }),
+    [mode]
+  );
 
   return (
     <ThemeContext.Provider value={{ mode, toggleMode }}>
-      <MuiThemeProvider theme={theme}>{children}</MuiThemeProvider>
+      <MuiThemeProvider disableTransitionOnChange={true} theme={theme}>
+        {children}
+      </MuiThemeProvider>
     </ThemeContext.Provider>
   );
 };
