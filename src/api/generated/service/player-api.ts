@@ -38,10 +38,11 @@ export const PlayerApiAxiosParamCreator = function (configuration?: Configuratio
         /**
          * 
          * @summary Player
+         * @param {string | null} [token] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        playerPlayerGet: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        playerPlayerGet: async (token?: string | null, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/player`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -68,10 +69,11 @@ export const PlayerApiAxiosParamCreator = function (configuration?: Configuratio
         /**
          * 
          * @summary Reset
+         * @param {string | null} [token] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        resetResetGet: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        resetResetGet: async (token?: string | null, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/reset`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -190,11 +192,12 @@ export const PlayerApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Player
+         * @param {string | null} [token] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async playerPlayerGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<APIRestUserDB>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.playerPlayerGet(options);
+        async playerPlayerGet(token?: string | null, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<APIRestUserDB>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.playerPlayerGet(token, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['PlayerApi.playerPlayerGet']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -202,11 +205,12 @@ export const PlayerApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Reset
+         * @param {string | null} [token] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async resetResetGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.resetResetGet(options);
+        async resetResetGet(token?: string | null, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.resetResetGet(token, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['PlayerApi.resetResetGet']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -252,20 +256,22 @@ export const PlayerApiFactory = function (configuration?: Configuration, basePat
         /**
          * 
          * @summary Player
+         * @param {PlayerApiPlayerPlayerGetRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        playerPlayerGet(options?: RawAxiosRequestConfig): AxiosPromise<APIRestUserDB> {
-            return localVarFp.playerPlayerGet(options).then((request) => request(axios, basePath));
+        playerPlayerGet(requestParameters: PlayerApiPlayerPlayerGetRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<APIRestUserDB> {
+            return localVarFp.playerPlayerGet(requestParameters.token, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Reset
+         * @param {PlayerApiResetResetGetRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        resetResetGet(options?: RawAxiosRequestConfig): AxiosPromise<boolean> {
-            return localVarFp.resetResetGet(options).then((request) => request(axios, basePath));
+        resetResetGet(requestParameters: PlayerApiResetResetGetRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<boolean> {
+            return localVarFp.resetResetGet(requestParameters.token, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -289,6 +295,34 @@ export const PlayerApiFactory = function (configuration?: Configuration, basePat
         },
     };
 };
+
+/**
+ * Request parameters for playerPlayerGet operation in PlayerApi.
+ * @export
+ * @interface PlayerApiPlayerPlayerGetRequest
+ */
+export interface PlayerApiPlayerPlayerGetRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof PlayerApiPlayerPlayerGet
+     */
+    readonly token?: string | null
+}
+
+/**
+ * Request parameters for resetResetGet operation in PlayerApi.
+ * @export
+ * @interface PlayerApiResetResetGetRequest
+ */
+export interface PlayerApiResetResetGetRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof PlayerApiResetResetGet
+     */
+    readonly token?: string | null
+}
 
 /**
  * Request parameters for searchSearchGet operation in PlayerApi.
@@ -342,23 +376,25 @@ export class PlayerApi extends BaseAPI {
     /**
      * 
      * @summary Player
+     * @param {PlayerApiPlayerPlayerGetRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof PlayerApi
      */
-    public playerPlayerGet(options?: RawAxiosRequestConfig) {
-        return PlayerApiFp(this.configuration).playerPlayerGet(options).then((request) => request(this.axios, this.basePath));
+    public playerPlayerGet(requestParameters: PlayerApiPlayerPlayerGetRequest = {}, options?: RawAxiosRequestConfig) {
+        return PlayerApiFp(this.configuration).playerPlayerGet(requestParameters.token, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @summary Reset
+     * @param {PlayerApiResetResetGetRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof PlayerApi
      */
-    public resetResetGet(options?: RawAxiosRequestConfig) {
-        return PlayerApiFp(this.configuration).resetResetGet(options).then((request) => request(this.axios, this.basePath));
+    public resetResetGet(requestParameters: PlayerApiResetResetGetRequest = {}, options?: RawAxiosRequestConfig) {
+        return PlayerApiFp(this.configuration).resetResetGet(requestParameters.token, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

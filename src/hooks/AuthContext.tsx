@@ -38,18 +38,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const logout = async () => {
-    const _ = await AuthApiFp().logoutLogoutGet();
+    // const _ = await AuthApiFp().logoutLogoutGet();
     setUser(null);
     setIsAuth(false);
-  };
-
-  const checkAuth = async (): Promise<boolean> => {
-    const request = await AuthApiFp().authVerifyTokenAuthVerifyGet();
-    try {
-      return (await request()).data.isAuthenticated;
-    } catch (e) {
-      return false;
-    }
   };
 
   const profile = async () => {
@@ -76,21 +67,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const fetchUser = async (retryCount = 1, delay = 3000) => {
     try {
-      let response = await checkAuth();
       let user = await profile();
 
-      if (user === null) {
-        user = null;
-        response = false;
-      }
-
-      if (response === false && retryCount > 0) {
+      if (user === null && retryCount > 0) {
         setTimeout(() => fetchUser(retryCount - 1, delay), delay);
         return;
       }
 
       setUser(user);
-      setIsAuth(response);
+      setIsAuth(Boolean(user));
     } catch (error) {
       console.error("Auth error:", error);
       setUser(null);

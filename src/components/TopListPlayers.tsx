@@ -66,7 +66,7 @@ const TopListPlayers = ({ battles, wins, damage }: Props) => {
       <Typography variant="h4" align="center" sx={{ mt: 4 }}>
         Топ игроков недели
       </Typography>
-      <FlexBox>
+      <FlexBox sx={{ flexDirection: { xs: "column", md: "row" } }}>
         <CategoryCard title="Топ по боям" data={battles} />
         <CategoryCard
           title="Топ по победам"
@@ -125,7 +125,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
                       </Link>
                     }
                   />
-                  <span>{item.value}</span>
+                  <span>{item.value as string}</span>
                 </StyledListItem>
               );
             })}

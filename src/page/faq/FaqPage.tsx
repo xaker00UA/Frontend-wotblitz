@@ -1,7 +1,3 @@
-import { DateRangePicker } from "../../components/CnangePeriod";
-
-function FaqPage() {
-  return <></>;
-}
+function FaqPage() {}
 
 export default FaqPage;

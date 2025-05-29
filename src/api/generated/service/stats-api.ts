@@ -38,11 +38,11 @@ export const StatsApiAxiosParamCreator = function (configuration?: Configuration
          * @summary Get General
          * @param {APIRegion} region 
          * @param {string} name 
-         * @param {string} [accessToken] 
+         * @param {string | null} [token] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getGeneralRegionPlayerGetGeneralGet: async (region: APIRegion, name: string, accessToken?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getGeneralRegionPlayerGetGeneralGet: async (region: APIRegion, name: string, token?: string | null, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'region' is not null or undefined
             assertParamExists('getGeneralRegionPlayerGetGeneralGet', 'region', region)
             // verify required parameter 'name' is not null or undefined
@@ -135,10 +135,11 @@ export const StatsApiAxiosParamCreator = function (configuration?: Configuration
          * @summary Get Session
          * @param {APIRegion} region 
          * @param {string} name 
+         * @param {string | null} [token] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getSessionRegionPlayerGetSessionGet: async (region: APIRegion, name: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getSessionRegionPlayerGetSessionGet: async (region: APIRegion, name: string, token?: string | null, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'region' is not null or undefined
             assertParamExists('getSessionRegionPlayerGetSessionGet', 'region', region)
             // verify required parameter 'name' is not null or undefined
@@ -186,12 +187,12 @@ export const StatsApiFp = function(configuration?: Configuration) {
          * @summary Get General
          * @param {APIRegion} region 
          * @param {string} name 
-         * @param {string} [accessToken] 
+         * @param {string | null} [token] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getGeneralRegionPlayerGetGeneralGet(region: APIRegion, name: string, accessToken?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<APIRestUser>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getGeneralRegionPlayerGetGeneralGet(region, name, accessToken, options);
+        async getGeneralRegionPlayerGetGeneralGet(region: APIRegion, name: string, token?: string | null, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<APIRestUser>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getGeneralRegionPlayerGetGeneralGet(region, name, token, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['StatsApi.getGeneralRegionPlayerGetGeneralGet']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -217,11 +218,12 @@ export const StatsApiFp = function(configuration?: Configuration) {
          * @summary Get Session
          * @param {APIRegion} region 
          * @param {string} name 
+         * @param {string | null} [token] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getSessionRegionPlayerGetSessionGet(region: APIRegion, name: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<APIRestUser>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getSessionRegionPlayerGetSessionGet(region, name, options);
+        async getSessionRegionPlayerGetSessionGet(region: APIRegion, name: string, token?: string | null, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<APIRestUser>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getSessionRegionPlayerGetSessionGet(region, name, token, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['StatsApi.getSessionRegionPlayerGetSessionGet']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -244,7 +246,7 @@ export const StatsApiFactory = function (configuration?: Configuration, basePath
          * @throws {RequiredError}
          */
         getGeneralRegionPlayerGetGeneralGet(requestParameters: StatsApiGetGeneralRegionPlayerGetGeneralGetRequest, options?: RawAxiosRequestConfig): AxiosPromise<APIRestUser> {
-            return localVarFp.getGeneralRegionPlayerGetGeneralGet(requestParameters.region, requestParameters.name, requestParameters.accessToken, options).then((request) => request(axios, basePath));
+            return localVarFp.getGeneralRegionPlayerGetGeneralGet(requestParameters.region, requestParameters.name, requestParameters.token, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -264,7 +266,7 @@ export const StatsApiFactory = function (configuration?: Configuration, basePath
          * @throws {RequiredError}
          */
         getSessionRegionPlayerGetSessionGet(requestParameters: StatsApiGetSessionRegionPlayerGetSessionGetRequest, options?: RawAxiosRequestConfig): AxiosPromise<APIRestUser> {
-            return localVarFp.getSessionRegionPlayerGetSessionGet(requestParameters.region, requestParameters.name, options).then((request) => request(axios, basePath));
+            return localVarFp.getSessionRegionPlayerGetSessionGet(requestParameters.region, requestParameters.name, requestParameters.token, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -294,7 +296,7 @@ export interface StatsApiGetGeneralRegionPlayerGetGeneralGetRequest {
      * @type {string}
      * @memberof StatsApiGetGeneralRegionPlayerGetGeneralGet
      */
-    readonly accessToken?: string
+    readonly token?: string | null
 }
 
 /**
@@ -351,6 +353,13 @@ export interface StatsApiGetSessionRegionPlayerGetSessionGetRequest {
      * @memberof StatsApiGetSessionRegionPlayerGetSessionGet
      */
     readonly name: string
+
+    /**
+     * 
+     * @type {string}
+     * @memberof StatsApiGetSessionRegionPlayerGetSessionGet
+     */
+    readonly token?: string | null
 }
 
 /**
@@ -369,7 +378,7 @@ export class StatsApi extends BaseAPI {
      * @memberof StatsApi
      */
     public getGeneralRegionPlayerGetGeneralGet(requestParameters: StatsApiGetGeneralRegionPlayerGetGeneralGetRequest, options?: RawAxiosRequestConfig) {
-        return StatsApiFp(this.configuration).getGeneralRegionPlayerGetGeneralGet(requestParameters.region, requestParameters.name, requestParameters.accessToken, options).then((request) => request(this.axios, this.basePath));
+        return StatsApiFp(this.configuration).getGeneralRegionPlayerGetGeneralGet(requestParameters.region, requestParameters.name, requestParameters.token, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -393,7 +402,7 @@ export class StatsApi extends BaseAPI {
      * @memberof StatsApi
      */
     public getSessionRegionPlayerGetSessionGet(requestParameters: StatsApiGetSessionRegionPlayerGetSessionGetRequest, options?: RawAxiosRequestConfig) {
-        return StatsApiFp(this.configuration).getSessionRegionPlayerGetSessionGet(requestParameters.region, requestParameters.name, options).then((request) => request(this.axios, this.basePath));
+        return StatsApiFp(this.configuration).getSessionRegionPlayerGetSessionGet(requestParameters.region, requestParameters.name, requestParameters.token, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

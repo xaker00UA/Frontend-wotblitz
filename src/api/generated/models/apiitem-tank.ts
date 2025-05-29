@@ -34,43 +34,43 @@ export interface APIItemTank {
      * @type {APIRestStatsTank}
      * @memberof APIItemTank
      */
-    'all'?: APIRestStatsTank | null;
+    'all': APIRestStatsTank | null;
     /**
      * 
      * @type {string}
      * @memberof APIItemTank
      */
-    'nation'?: string;
+    'nation': string;
     /**
      * 
      * @type {APIImages}
      * @memberof APIItemTank
      */
-    'images'?: APIImages;
+    'images': APIImages;
     /**
      * 
      * @type {string}
      * @memberof APIItemTank
      */
-    'name'?: string;
+    'name': string;
     /**
      * 
      * @type {APILevel}
      * @memberof APIItemTank
      */
-    'level'?: APILevel;
+    'level': APILevel;
     /**
      * 
      * @type {boolean}
      * @memberof APIItemTank
      */
-    'is_premium'?: boolean;
+    'is_premium': boolean;
     /**
      * 
      * @type {number}
      * @memberof APIItemTank
      */
-    'last_battle_time'?: number;
+    'last_battle_time': number;
     /**
      * 
      * @type {number}

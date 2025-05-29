@@ -58,13 +58,13 @@ export interface APIRestUser {
      * @type {number}
      * @memberof APIRestUser
      */
-    'time'?: number;
+    'time': number;
     /**
      * 
      * @type {APIRestPrivate}
      * @memberof APIRestUser
      */
-    'private'?: APIRestPrivate | null;
+    'private': APIRestPrivate | null;
     /**
      * 
      * @type {APIGeneral}
@@ -76,13 +76,13 @@ export interface APIRestUser {
      * @type {APIGeneralTanks}
      * @memberof APIRestUser
      */
-    'tanks'?: APIGeneralTanks | null;
+    'tanks': APIGeneralTanks | null;
     /**
      * 
      * @type {APIMedals}
      * @memberof APIRestUser
      */
-    'medals'?: APIMedals;
+    'medals': APIMedals;
 }
 
 

@@ -66,7 +66,7 @@ export default function AdminLogin() {
     const fetchData = async (form: APILoginForm) => {
       try {
         const request = await api.loginAdminLoginPost(form);
-        console.log((await request()).data);
+        await request();
         navigate("/admin");
       } catch (e) {
         const err = e as AxiosError<any>;

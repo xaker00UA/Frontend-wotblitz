@@ -23,6 +23,11 @@ const PlayerGeneral: React.FC<PlayerGeneralProps> = ({
   name,
 }) => {
   const addError = useError();
+  useEffect(() => {
+    if (!isLoading && (!account || !name || account.battles === 0)) {
+      addError("Сыграйте один бой в рандоме чтобы увидеть результат");
+    }
+  }, [isLoading, account, name, addError]);
   if (isLoading) {
     return (
       <Box
@@ -37,10 +42,6 @@ const PlayerGeneral: React.FC<PlayerGeneralProps> = ({
   }
 
   if (!account || !name || account.battles === 0) {
-    useEffect(() => {
-      addError("Сыграйте один бой в рандоме чтобы увидеть результат");
-    }, [account]);
-
     return null;
   }
 

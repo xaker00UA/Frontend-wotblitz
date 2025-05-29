@@ -25,36 +25,36 @@ export interface APIRestPrivate {
      * @type {number}
      * @memberof APIRestPrivate
      */
-    'gold'?: number;
+    'gold': number;
     /**
      * 
      * @type {number}
      * @memberof APIRestPrivate
      */
-    'free_xp'?: number;
+    'free_xp': number;
     /**
      * 
      * @type {number}
      * @memberof APIRestPrivate
      */
-    'credits'?: number;
+    'credits': number;
     /**
      * 
      * @type {boolean}
      * @memberof APIRestPrivate
      */
-    'is_premium'?: boolean;
+    'is_premium': boolean;
     /**
      * 
      * @type {number}
      * @memberof APIRestPrivate
      */
-    'premium_expires_at'?: number;
+    'premium_expires_at': number;
     /**
      * 
      * @type {number}
      * @memberof APIRestPrivate
      */
-    'battle_life_time'?: number;
+    'battle_life_time': number;
 }
 

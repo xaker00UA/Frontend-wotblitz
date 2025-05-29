@@ -24,13 +24,9 @@ import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError
 // @ts-ignore
 import type { APIAuthLogin } from '../models';
 // @ts-ignore
-import type { APIAuthVerify } from '../models';
-// @ts-ignore
 import type { APIErrorResponse } from '../models';
 // @ts-ignore
 import type { APIRegion } from '../models';
-// @ts-ignore
-import type { APIRestUserDB } from '../models';
 /**
  * AuthApi - axios parameter creator
  * @export
@@ -91,37 +87,6 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * 
-         * @summary Auth Verify Token
-         * @param {string} [accessToken] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        authVerifyTokenAuthVerifyGet: async (accessToken?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/auth/verify`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
          * @summary Login
          * @param {APIRegion} region 
          * @param {string} redirectUrl 
@@ -164,10 +129,11 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
         /**
          * 
          * @summary Logout
+         * @param {string | null} [token] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        logoutLogoutGet: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        logoutLogoutGet: async (token?: string | null, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/logout`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -211,23 +177,10 @@ export const AuthApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async authAuthGet(accessToken: string, nickname: string, accountId: number, region?: string | null, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<APIRestUserDB>> {
+        async authAuthGet(accessToken: string, nickname: string, accountId: number, region?: string | null, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.authAuthGet(accessToken, nickname, accountId, region, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AuthApi.authAuthGet']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
-         * @summary Auth Verify Token
-         * @param {string} [accessToken] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async authVerifyTokenAuthVerifyGet(accessToken?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<APIAuthVerify>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.authVerifyTokenAuthVerifyGet(accessToken, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['AuthApi.authVerifyTokenAuthVerifyGet']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -247,11 +200,12 @@ export const AuthApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Logout
+         * @param {string | null} [token] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async logoutLogoutGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.logoutLogoutGet(options);
+        async logoutLogoutGet(token?: string | null, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.logoutLogoutGet(token, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AuthApi.logoutLogoutGet']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -273,18 +227,8 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        authAuthGet(requestParameters: AuthApiAuthAuthGetRequest, options?: RawAxiosRequestConfig): AxiosPromise<APIRestUserDB> {
+        authAuthGet(requestParameters: AuthApiAuthAuthGetRequest, options?: RawAxiosRequestConfig): AxiosPromise<any> {
             return localVarFp.authAuthGet(requestParameters.accessToken, requestParameters.nickname, requestParameters.accountId, requestParameters.region, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Auth Verify Token
-         * @param {AuthApiAuthVerifyTokenAuthVerifyGetRequest} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        authVerifyTokenAuthVerifyGet(requestParameters: AuthApiAuthVerifyTokenAuthVerifyGetRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<APIAuthVerify> {
-            return localVarFp.authVerifyTokenAuthVerifyGet(requestParameters.accessToken, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -299,11 +243,12 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
         /**
          * 
          * @summary Logout
+         * @param {AuthApiLogoutLogoutGetRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        logoutLogoutGet(options?: RawAxiosRequestConfig): AxiosPromise<boolean> {
-            return localVarFp.logoutLogoutGet(options).then((request) => request(axios, basePath));
+        logoutLogoutGet(requestParameters: AuthApiLogoutLogoutGetRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<boolean> {
+            return localVarFp.logoutLogoutGet(requestParameters.token, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -344,20 +289,6 @@ export interface AuthApiAuthAuthGetRequest {
 }
 
 /**
- * Request parameters for authVerifyTokenAuthVerifyGet operation in AuthApi.
- * @export
- * @interface AuthApiAuthVerifyTokenAuthVerifyGetRequest
- */
-export interface AuthApiAuthVerifyTokenAuthVerifyGetRequest {
-    /**
-     * 
-     * @type {string}
-     * @memberof AuthApiAuthVerifyTokenAuthVerifyGet
-     */
-    readonly accessToken?: string
-}
-
-/**
  * Request parameters for loginLoginRegionGet operation in AuthApi.
  * @export
  * @interface AuthApiLoginLoginRegionGetRequest
@@ -376,6 +307,20 @@ export interface AuthApiLoginLoginRegionGetRequest {
      * @memberof AuthApiLoginLoginRegionGet
      */
     readonly redirectUrl: string
+}
+
+/**
+ * Request parameters for logoutLogoutGet operation in AuthApi.
+ * @export
+ * @interface AuthApiLogoutLogoutGetRequest
+ */
+export interface AuthApiLogoutLogoutGetRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof AuthApiLogoutLogoutGet
+     */
+    readonly token?: string | null
 }
 
 /**
@@ -399,18 +344,6 @@ export class AuthApi extends BaseAPI {
 
     /**
      * 
-     * @summary Auth Verify Token
-     * @param {AuthApiAuthVerifyTokenAuthVerifyGetRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AuthApi
-     */
-    public authVerifyTokenAuthVerifyGet(requestParameters: AuthApiAuthVerifyTokenAuthVerifyGetRequest = {}, options?: RawAxiosRequestConfig) {
-        return AuthApiFp(this.configuration).authVerifyTokenAuthVerifyGet(requestParameters.accessToken, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
      * @summary Login
      * @param {AuthApiLoginLoginRegionGetRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
@@ -424,12 +357,13 @@ export class AuthApi extends BaseAPI {
     /**
      * 
      * @summary Logout
+     * @param {AuthApiLogoutLogoutGetRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuthApi
      */
-    public logoutLogoutGet(options?: RawAxiosRequestConfig) {
-        return AuthApiFp(this.configuration).logoutLogoutGet(options).then((request) => request(this.axios, this.basePath));
+    public logoutLogoutGet(requestParameters: AuthApiLogoutLogoutGetRequest = {}, options?: RawAxiosRequestConfig) {
+        return AuthApiFp(this.configuration).logoutLogoutGet(requestParameters.token, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

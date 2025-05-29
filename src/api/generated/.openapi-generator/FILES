@@ -8,7 +8,6 @@ git_push.sh
 index.ts
 models/apiadmin-stats.ts
 models/apiauth-login.ts
-models/apiauth-verify.ts
 models/apibase-stats.ts
 models/apiclan-db.ts
 models/apiclan-top.ts

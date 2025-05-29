@@ -1,6 +1,5 @@
 export * from './apiadmin-stats';
 export * from './apiauth-login';
-export * from './apiauth-verify';
 export * from './apibase-stats';
 export * from './apiclan-db';
 export * from './apiclan-top';
