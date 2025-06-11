@@ -11,6 +11,7 @@ import ClanPage from "./page/clan/ClanPage";
 import AdminLogin from "./page/admin/LoginAdmin";
 import AdminPanel from "./page/admin/AdminPanel";
 import HomePage from "./page/home/Home";
+import FaqPage from "./page/faq/FaqPage";
 
 export const router = createBrowserRouter([
   {
@@ -23,21 +24,16 @@ export const router = createBrowserRouter([
       </>
     ),
     children: [
-      { index: true, element: <HomePage /> },
+      { path: "/", element: <HomePage /> },
       { path: ":region/player/:nickname", element: <Player /> },
       { path: ":region/clan/:name", element: <ClanPage /> },
       { path: "profile", element: <Profile /> },
       { path: "players", element: <TopPlayersPage /> },
       { path: "clans", element: <TopClanPage /> },
       { path: "auth", element: <Auth /> },
-      { path: "about", element: <div>About</div> },
-      {
-        path: "admin",
-        children: [
-          { index: true, element: <AdminPanel /> },
-          { path: "login", element: <AdminLogin /> },
-        ],
-      },
+      { path: "about", element: <FaqPage /> },
+      { path: "admin", element: <AdminPanel /> },
+      { path: "admin/login", element: <AdminLogin /> },
       { path: "*", element: <div>404</div> },
     ],
   },

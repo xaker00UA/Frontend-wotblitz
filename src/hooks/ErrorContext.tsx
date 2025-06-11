@@ -1,62 +1,72 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useCallback,
-  useEffect,
-} from "react";
+import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
 
-// Тип для ошибки
-interface ErrorMessage {
+// Типы уведомлений
+interface NotificationMessage {
   id: number;
   message: string;
+  type: "error" | "success"; // 🔴 Ошибка или ✅ Успех
 }
 
-// Контексты для добавления и удаления ошибок
-const AddErrorContext = createContext<(msg: string) => void>(() => {});
-const ErrorDataContext = createContext<{
-  error: ErrorMessage | null;
-  removeError: () => void;
-}>({ error: null, removeError: () => {} });
+// Контекст уведомлений
+const AddNotificationContext = createContext<(message: string, type?: "error" | "success") => void>(() => {});
+const NotificationDataContext = createContext<{ 
+  notification: NotificationMessage | null; 
+  removeNotification: () => void;
+}>({ notification: null, removeNotification: () => {} });
 
-// Провайдер для ошибок
-export const ErrorProvider = ({ children }: { children: React.ReactNode }) => {
-  const [errors, setErrors] = useState<ErrorMessage[]>([]);
-  const [currentError, setCurrentError] = useState<ErrorMessage | null>(null);
-  // Мемоизация добавления ошибки
-  const addError = useCallback((message: string) => {
+export const NotificationProvider = ({ children }: { children: React.ReactNode }) => {
+  const [notifications, setNotifications] = useState<NotificationMessage[]>([]);
+  const [currentNotification, setCurrentNotification] = useState<NotificationMessage | null>(null);
+
+  // Добавление уведомления (по умолчанию — ошибка)
+  const addNotification = useCallback((message: string, type: "error" | "success" = "error") => {
     const id = Date.now();
-    setErrors((prev) => {
-      if (prev.some((err) => err.message === message)) return prev;
-      return [...prev, { id, message }];
-    });
+    setNotifications((prev) => [...prev, { id, message, type }]);
   }, []);
-  // Мемоизация удаления ошибки
-  const removeError = useCallback(() => {
-    setErrors((prev) => {
-      const nextError = prev.length > 1 ? prev[1] : null;
-      setCurrentError(nextError);
-      return prev.slice(1); // Удаляем первую ошибку и показываем следующую
+
+  // Удаление уведомления
+  const removeNotification = useCallback(() => {
+    setNotifications((prev) => {
+      const nextNotification = prev.length > 1 ? prev[1] : null;
+      setCurrentNotification(nextNotification);
+      return prev.slice(1);
     });
   }, []);
 
+  // Авто-удаление через 5 секунд
   useEffect(() => {
-    if (errors.length > 0 && !currentError) {
-      setCurrentError(errors[0]);
+    if (currentNotification) {
+      const timer = setTimeout(() => removeNotification(), 5000);
+      return () => clearTimeout(timer);
     }
-  }, [errors, currentError]);
+  }, [currentNotification]);
+
+  // Обновляем текущее уведомление при изменении списка
+  useEffect(() => {
+    if (notifications.length > 0 && !currentNotification) {
+      setCurrentNotification(notifications[0]);
+    }
+  }, [notifications, currentNotification]);
 
   return (
-    <AddErrorContext.Provider value={addError}>
-      <ErrorDataContext.Provider value={{ error: currentError, removeError }}>
+    <AddNotificationContext.Provider value={addNotification}>
+      <NotificationDataContext.Provider value={{ notification: currentNotification, removeNotification }}>
         {children}
-      </ErrorDataContext.Provider>
-    </AddErrorContext.Provider>
+      </NotificationDataContext.Provider>
+    </AddNotificationContext.Provider>
   );
 };
+export const useNotification = () => useContext(AddNotificationContext);
+export const useNotificationData = () => useContext(NotificationDataContext);
 
-// Хук для добавления ошибок (для всех компонентов)
-export const useError = () => useContext(AddErrorContext);
+// 🔴 `useError` по-прежнему работает
+export const useError = () => {
+  const addNotification = useContext(AddNotificationContext);
+  return (message: string) => addNotification(message, "error");
+};
 
-// Хук для получения ошибок и их удаления (для ErrorSnackbar)
-export const useErrorData = () => useContext(ErrorDataContext);
+// ✅ `useSuccess` теперь тоже работает
+export const useSuccess = () => {
+  const addNotification = useContext(AddNotificationContext);
+  return (message: string) => addNotification(message, "success");
+};

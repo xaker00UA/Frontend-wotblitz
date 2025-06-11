@@ -14,12 +14,14 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^7.0.2",
-    "@mui/material": "^7.0.2",
+    "@mui/material": "^7.1.1",
     "@mui/styled-engine-sc": "^7.0.2",
     "@mui/styles": "^6.4.11",
     "@mui/system": "^7.0.2",
+    "@mui/x-date-pickers": "^8.5.1",
     "axios": "^1.8.4",
-    "gen": "^2.0.1",
+    "date-fns": "^4.1.0",
+    "gen": "^1.6.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.5.1",
@@ -27,7 +29,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",
-    "@openapitools/openapi-generator-cli": "^2.19.1",
+    "@openapitools/openapi-generator-cli": "^2.13.12",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
@@ -36,7 +38,7 @@
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^16.0.0",
     "typescript": "~5.7.2",
-    "typescript-eslint": "^8.26.1",
+    "typescript-eslint": "^7.3.1",
     "vite": "^6.3.1"
   }
 }

@@ -1,74 +1,34 @@
 import {
   Box,
   Button,
-  CircularProgress,
   Stack,
   Typography,
   Paper,
   LinearProgress,
-  styled,
   useTheme,
+  IconButton,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 import {
   AdminApiFp,
-  APICommand,
   APICommands,
   APIRegion,
+  APIAdminStats,
+  APIRestUserDB,
 } from "../../api/generated";
-import { useError } from "../../hooks/ErrorContext";
-
-type APICommandKeys = keyof typeof APICommands;
-
-const ProgressButton = styled(Button, {
-  shouldForwardProp: (prop) => prop !== "progress",
-})<{
-  progress: number;
-}>(({ theme, progress }) => ({
-  position: "relative",
-  overflow: "hidden",
-  padding: "12px 24px",
-  height: 56, // Устанавливаем фиксированную высоту
-  color: progress === 100 ? "white" : "inherit",
-  backgroundColor:
-    progress === 100 ? theme.palette.success.main : theme.palette.primary.main,
-  "&:disabled": {
-    backgroundColor: theme.palette.grey[400],
-  },
-  "& .MuiLinearProgress-root": {
-    position: "absolute",
-    bottom: 0, // Прогресс начинается снизу
-    left: 0,
-    width: "100%",
-    height: "100%",
-    transform: "rotate(180deg)", // Поворачиваем прогресс-бар, чтобы он шел снизу вверх
-    zIndex: 1,
-  },
-  "& .MuiButton-label": {
-    position: "relative",
-    zIndex: 2, // Текст будет поверх прогресса
-  },
-}));
-
+import { useError, useSuccess } from "../../hooks/ErrorContext";
+import Search from "../../components/Search";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
 export default function AdminPanel() {
   const api = AdminApiFp();
   const addError = useError();
+  const addSuccess = useSuccess();
   const navigate = useNavigate();
+  const [data, setData] = useState<APIAdminStats | null>(null);
 
-  const [loadingCommands, setLoadingCommands] = useState<
-    Record<APICommandKeys, boolean>
-  >({
-    ResetUser: false,
-    ResetClan: false,
-    DeleteUser: false,
-    DeleteClan: false,
-    UpdatePlayerDb: false,
-    UpdateClanDb: false,
-  });
-
-  const [progress, setProgress] = useState(10);
+  const theme = useTheme();
 
   const verify = async () => {
     try {
@@ -86,96 +46,273 @@ export default function AdminPanel() {
     await request();
     await verify();
   };
-
-  const handleCommand = async (command: string) => {
-    setLoadingCommands((prev) => ({ ...prev, [command]: true }));
-    setProgress(0); // Начинаем с 0%
-
-    // Таймер для прогресса
-    const timer = setInterval(() => {
-      setProgress((prevProgress) => {
-        if (prevProgress >= 100) {
-          clearInterval(timer);
-          return 100;
-        }
-        return prevProgress + 10;
-      });
-    }, 400); // Каждый 400мс увеличиваем прогресс на 10%
-
-    setTimeout(() => {
-      // Когда выполнение завершено (например, после 4 секунд)
-      setLoadingCommands((prev) => ({ ...prev, [command]: false }));
-      setProgress(100); // Устанавливаем финальный прогресс
-    }, 4000);
+  const adminInfo = async () => {
+    const request = await api.infoAdminInfoGet(100);
+    const response = await request();
+    setData(response.data);
   };
-  //     try {
-  //       const request = await api.protectedRouteAdminCommandsPost({
-  //         command,
-  //         region: "eu", // или выбирай из select
-  //       });
-  //       await request();
-  //     } catch (e) {
-  //       const err = e as AxiosError<any>;
-  //       addError(err.response?.data?.detail ?? "Ошибка выполнения команды");
-  //     } finally {
-  //       setLoadingCommands((prev) => ({ ...prev, [command]: false }));
-  //     }
-  //   };
-
   useEffect(() => {
+    adminInfo();
     verify();
   }, []);
 
+  const handleCommand = async (
+    command: APICommands,
+    region?: APIRegion,
+    args?: string
+  ) => {
+    try {
+      const request = await api.protectedRouteAdminCommandsPost({
+        command: command,
+        region: region,
+        arguments: args, // или выбирай из select
+      });
+      await request();
+      addSuccess("Команда успешно выполнена");
+    } catch (e) {
+      const err = e as AxiosError<any>;
+      addError(err.response?.data?.detail ?? "Ошибка выполнения команды");
+    }
+  };
+
   return (
-    <Box p={4}>
-      <Stack spacing={2}>
-        <Box display="flex" justifyContent="space-between" alignItems="center">
-          <Typography variant="h5">Админ-панель</Typography>
-          <Button variant="outlined" color="secondary" onClick={logout}>
-            Выйти
-          </Button>
+    <Box
+      sx={{
+        width: "100%",
+        minHeight: "calc(100vh - 60px)",
+        display: "flex",
+        flexDirection: "column",
+        p: 4,
+      }}
+    >
+      {/* Хедер */}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          mb: 2,
+        }}
+      >
+        <Typography variant="h5">Админ-панель</Typography>
+        <Button variant="outlined" color="secondary" onClick={logout}>
+          Выйти
+        </Button>
+      </Box>
+
+      {/* Контент: левая и правая колонка */}
+      <Box sx={{ flex: 1, display: "flex", flexGrow: 1, gap: 2 }}>
+        {/* Левая колонка (Команды - 2/3) */}
+        <Box sx={{ flex: 3, height: 600 }}>
+          <Paper elevation={2} sx={{ p: 2 }}>
+            <Typography variant="subtitle1" gutterBottom>
+              Команды:
+            </Typography>
+            <Stack sx={{ height: "100%" }} direction="column" spacing={12}>
+              <Stack direction="row" spacing={2}>
+                <Search AdminFunction={handleCommand}></Search>
+              </Stack>
+              <Stack direction="row" spacing={2}>
+                <ProgressButton
+                  command={APICommands.UpdateClanDb}
+                  duration={50 * 1000}
+                  label="Обновить бд кланов"
+                  onExecute={handleCommand}
+                />
+
+                <ProgressButton
+                  command={APICommands.UpdatePlayerDb}
+                  duration={130 * 1000}
+                  label="Обновить бд игроков"
+                  onExecute={handleCommand}
+                />
+              </Stack>
+            </Stack>
+          </Paper>
         </Box>
 
-        {/* Информационная панель */}
-        <Paper elevation={2} sx={{ p: 2 }}>
-          <Typography variant="subtitle1">Информация:</Typography>
-          <Typography variant="body2">
-            Здесь может быть любая информация (например, статус сервера,
-            количество кланов и т.д.).
-          </Typography>
-        </Paper>
+        {/* Правая колонка (Информация - 1/3) */}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            flex: 2,
+          }}
+        >
+          <Paper elevation={2} sx={{ p: 2 }}>
+            <Box sx={{ display: "flex", justifyContent: "end" }}>
+              <IconButton sx={{ alignSelf: "flex-end" }} onClick={adminInfo}>
+                <RestartAltIcon />
+              </IconButton>
+            </Box>
+            <Typography variant="subtitle1">Общая информация:</Typography>
+            <Typography variant="body2">
+              Сервер уже зупущен: {data?.uptime_seconds} секунд <br />
+              Пользователи: {data?.user_count}
+              <br />
+              Кланы: {data?.clan_count}
+              <br />
+              Последнее обновление игроков: {data?.last_players_update}
+              <br />
+              Последнее обновление кланов: {data?.last_clan_update}
+              <br />
+              Активные пользователей: {data?.count_active_users}
+              <br />
+              Список активных пользователей:
+              <br />
+              {data !== null && data?.active_users_list?.length > 0 ? (
+                <ul>
+                  {data.active_users_list.map((user: APIRestUserDB) => (
+                    <li key={user.player_id}>{user.name}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p>Нет активных пользователей</p>
+              )}
+              Вызовы внешнего API: {data?.external_api_calls}
+              <br />
+              Вызовы API сервера:
+              <br />
+              <ul>
+                {Object.entries(data?.custom_api_calls || {}).map(
+                  ([key, value]) => (
+                    <li key={key}>
+                      {key}: {value}
+                    </li>
+                  )
+                )}
+              </ul>
+            </Typography>
+          </Paper>
 
-        {/* Команды */}
-        <Paper elevation={2} sx={{ p: 2 }}>
-          <Typography variant="subtitle1" gutterBottom>
-            Команды:
-          </Typography>
-          <Stack direction="row" spacing={2}>
-            <ProgressButton
-              variant="contained"
-              onClick={() => handleCommand("DeleteClan")}
-              disabled={loadingCommands.DeleteClan}
-              progress={progress} // Передаем прогресс в компонент кнопки
-            >
-              {loadingCommands.DeleteClan
-                ? `${progress}% - Пересоздаём кланы...`
-                : "Пересоздать кланы"}
-            </ProgressButton>
-            {/* <Button
-              variant="contained"
-              onClick={() => handleCommand("REFRESH_CACHE")}
-              disabled={loadingCommands.REFRESH_CACHE}
-              startIcon={
-                loadingCommands.REFRESH_CACHE ? (
-                  <CircularProgress size={20} />
-                ) : null
-              }
-            >
-              Обновить кэш
-            </Button> */}
-          </Stack>
-        </Paper>
-      </Stack>
+          <Paper elevation={2} sx={{ p: 2, mt: 2 }}>
+            <Typography variant="subtitle1">Последние 100 логов:</Typography>
+            <Typography variant="body2">
+              <pre
+                style={{
+                  background: theme.palette.background.paper,
+                  padding: "10px",
+                  borderRadius: "5px",
+                  overflowY: "auto",
+                  maxHeight: "300px", // Ограничение высоты для скролла
+                  whiteSpace: "pre-wrap", // Чтобы строки переносились
+                  wordWrap: "break-word", // Разбивать длинные слова
+                }}
+              >
+                {JSON.stringify(
+                  data?.last_1000_logs.slice().reverse(),
+                  null,
+                  2
+                )}
+              </pre>
+            </Typography>
+          </Paper>
+        </Box>
+      </Box>
     </Box>
+  );
+}
+
+interface Props {
+  label: string;
+  command: APICommands;
+  duration: number; // Время выполнения (в миллисекундах)
+  onExecute: (
+    command: APICommands,
+    region?: APIRegion,
+    args?: string
+  ) => Promise<void>; // Функция для вызова
+}
+const ProgressButton = ({ label, command, duration, onExecute }: Props) => {
+  const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
+
+  const handleClick = async () => {
+    setLoading(true);
+    setProgress(0);
+
+    const interval = setInterval(() => {
+      setProgress((prev) => Math.min(prev + 100 / (duration / 100), 100));
+    }, 100);
+
+    try {
+      await onExecute(command); // Вызываем функцию
+      // await new Promise((resolve) => setTimeout(resolve, duration));
+    } catch (e) {
+    } finally {
+      clearInterval(interval);
+      setProgress(100);
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      setLoading(false);
+      setTimeout(() => setProgress(0), 500); // Сброс после завершения
+    }
+  };
+
+  return (
+    <Button
+      variant="contained"
+      onClick={handleClick}
+      disabled={loading}
+      sx={{ position: "relative", overflow: "hidden" }}
+    >
+      {/* Полупрозрачный цветной слой */}
+      {loading && (
+        <Box
+          sx={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            width: "100%",
+            height: `${progress}%`, // Заполняем снизу вверх
+            backgroundColor: "success.light", // Цвет заливки (можно менять)
+            transition: "height 0.1s ease-in-out",
+          }}
+        />
+      )}
+      {label}
+    </Button>
+  );
+};
+
+function AnimationButton() {
+  const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
+
+  const handleClick = () => {
+    setLoading(true);
+    setProgress(0);
+
+    const interval = setInterval(() => {
+      setProgress((prev) => Math.min(prev + 100 / (5000 / 100), 100));
+    }, 100);
+
+    setTimeout(() => {
+      clearInterval(interval);
+      setLoading(false);
+    }, 5000);
+  };
+
+  return (
+    <>
+      {loading ? (
+        <LinearProgress
+          variant="determinate"
+          value={progress}
+          color="success"
+          sx={{ width: 200, height: 40 }}
+        />
+      ) : (
+        <Button
+          variant="contained"
+          onClick={handleClick}
+          sx={{
+            width: 200,
+            height: 40,
+          }}
+        >
+          Загрузить
+        </Button>
+      )}
+    </>
   );
 }

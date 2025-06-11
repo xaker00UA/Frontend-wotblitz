@@ -1,20 +1,24 @@
 import { Snackbar, Alert } from "@mui/material";
-import { useErrorData } from "../hooks/ErrorContext";
+import { useNotificationData } from "../hooks/ErrorContext"; // Используем обновленный контекст
 import React from "react";
 
-export const ErrorSnackbar = React.memo(() => {
-  const { error, removeError } = useErrorData();
-  if (!error) return null; // Если нет ошибки, ничего не отображаем
+export const NotificationSnackbar = React.memo(() => {
+  const { notification, removeNotification } = useNotificationData();
+  if (!notification) return null;
 
   return (
     <Snackbar
-      key={error.id}
+      key={notification.id}
       open
-      onClose={removeError}
+      onClose={removeNotification}
       anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
     >
-      <Alert severity="error" onClose={removeError} sx={{ width: "100%" }}>
-        {error.message}
+      <Alert
+        severity={notification.type === "error" ? "error" : "success"}
+        onClose={removeNotification}
+        sx={{ width: "100%" }}
+      >
+        {notification.message}
       </Alert>
     </Snackbar>
   );

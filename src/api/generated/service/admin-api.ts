@@ -22,6 +22,8 @@ import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObj
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError, operationServerMap } from '../base';
 // @ts-ignore
+import type { APIAdminStats } from '../models';
+// @ts-ignore
 import type { APICommand } from '../models';
 // @ts-ignore
 import type { APIErrorResponse } from '../models';
@@ -33,6 +35,42 @@ import type { APILoginForm } from '../models';
  */
 export const AdminApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
+        /**
+         * 
+         * @summary Info
+         * @param {number} [limit] 
+         * @param {string} [adminToken] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        infoAdminInfoGet: async (limit?: number, adminToken?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/admin/info`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (limit !== undefined) {
+                localVarQueryParameter['limit'] = limit;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
         /**
          * 
          * @summary Login
@@ -179,6 +217,20 @@ export const AdminApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
+         * @summary Info
+         * @param {number} [limit] 
+         * @param {string} [adminToken] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async infoAdminInfoGet(limit?: number, adminToken?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<APIAdminStats>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.infoAdminInfoGet(limit, adminToken, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.infoAdminInfoGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @summary Login
          * @param {APILoginForm} aPILoginForm 
          * @param {*} [options] Override http request option.
@@ -241,6 +293,16 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
     return {
         /**
          * 
+         * @summary Info
+         * @param {AdminApiInfoAdminInfoGetRequest} requestParameters Request parameters.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        infoAdminInfoGet(requestParameters: AdminApiInfoAdminInfoGetRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<APIAdminStats> {
+            return localVarFp.infoAdminInfoGet(requestParameters.limit, requestParameters.adminToken, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Login
          * @param {AdminApiLoginAdminLoginPostRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
@@ -280,6 +342,27 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
         },
     };
 };
+
+/**
+ * Request parameters for infoAdminInfoGet operation in AdminApi.
+ * @export
+ * @interface AdminApiInfoAdminInfoGetRequest
+ */
+export interface AdminApiInfoAdminInfoGetRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof AdminApiInfoAdminInfoGet
+     */
+    readonly limit?: number
+
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminApiInfoAdminInfoGet
+     */
+    readonly adminToken?: string
+}
 
 /**
  * Request parameters for loginAdminLoginPost operation in AdminApi.
@@ -337,6 +420,18 @@ export interface AdminApiVerifyTokenAdminVerifyGetRequest {
  * @extends {BaseAPI}
  */
 export class AdminApi extends BaseAPI {
+    /**
+     * 
+     * @summary Info
+     * @param {AdminApiInfoAdminInfoGetRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AdminApi
+     */
+    public infoAdminInfoGet(requestParameters: AdminApiInfoAdminInfoGetRequest = {}, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).infoAdminInfoGet(requestParameters.limit, requestParameters.adminToken, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * 
      * @summary Login

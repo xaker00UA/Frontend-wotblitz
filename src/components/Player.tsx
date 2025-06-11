@@ -10,7 +10,7 @@ import { transformTankData } from "../helper/TransformType";
 import { Timer } from "./Timer";
 import { useError } from "../hooks/ErrorContext";
 import { useStats } from "../hooks/StatsContext";
-import React from "react";
+import { Medal } from "./MedalComponent";
 
 type Props = {
   region: string;
@@ -81,7 +81,10 @@ export default function PlayerStack({ region, nickname }: Props) {
           general={general?.general ?? null}
           nickname={nickname}
         ></GeneralStats>
-
+        <Medal
+          current={general?.medals?.medals}
+          session={details?.medals?.medals}
+        />
         {/* Статистика */}
         <TableStats stats={details?.tanks ?? null} />
         <GridTanks tanks={transformTankData(details?.tanks?.now)} />

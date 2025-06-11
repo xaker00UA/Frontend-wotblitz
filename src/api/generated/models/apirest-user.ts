@@ -21,6 +21,9 @@ import type { APIGeneral } from './apigeneral';
 import type { APIGeneralTanks } from './apigeneral-tanks';
 // May contain unused imports in some cases
 // @ts-ignore
+import type { APIMedals } from './apimedals';
+// May contain unused imports in some cases
+// @ts-ignore
 import type { APIRegion } from './apiregion';
 // May contain unused imports in some cases
 // @ts-ignore
@@ -74,6 +77,12 @@ export interface APIRestUser {
      * @memberof APIRestUser
      */
     'tanks'?: APIGeneralTanks | null;
+    /**
+     * 
+     * @type {APIMedals}
+     * @memberof APIRestUser
+     */
+    'medals'?: APIMedals;
 }
 
 

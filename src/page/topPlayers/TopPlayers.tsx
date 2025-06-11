@@ -47,8 +47,8 @@ export default function TopPlayersPage() {
   }, [startDay, limit]);
 
   return (
-    <>
+    <Box width="100%">
       <TopListPlayers battles={data[0]} wins={data[1]} damage={data[2]} />
-    </>
+    </Box>
   );
 }

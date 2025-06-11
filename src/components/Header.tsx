@@ -26,6 +26,8 @@ import RegionSelectModal from "./ModalWindow";
 import LogoutIcon from "@mui/icons-material/Logout";
 import LoginIcon from "@mui/icons-material/Login";
 import MenuIcon from "@mui/icons-material/Menu";
+import { useConfirmation } from "../hooks/ConfirmationContext";
+
 const HoverButton = styled(Button)(({ theme }) => ({
   transition: "background-color 0.2s ease",
   "&:hover": {
@@ -44,11 +46,12 @@ const HoverButton = styled(Button)(({ theme }) => ({
 export default function Header() {
   const { mode, toggleMode } = useThemeMode();
   const { isAuthenticated, logout, reset } = useAuth();
+  const { confirm } = useConfirmation();
   const isDesktop = useMediaQuery((theme) => theme.breakpoints.up("md"));
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [activeTab, setActiveTab] = useState<string | false>(location.pathname);
+  const [activeTab, setActiveTab] = useState<string | false>(false);
   const [openModal, setOpenModal] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -59,7 +62,7 @@ export default function Header() {
 
   const handleProfile = () => navigate("/profile");
   const toggleDrawer = () => setDrawerOpen((prev) => !prev);
-
+  const handleReset = () => confirm("Сбросить статистику", reset);
   useEffect(() => {
     if (!navItems.some((item) => item.path === location.pathname)) {
       setActiveTab(false);
@@ -98,7 +101,6 @@ export default function Header() {
           </ListItem>
         ))}
         <Divider></Divider>
-        {/* <Box sx={{ mt: 2 }}> */}
         {!isAuthenticated ? (
           <>
             <ListItem
@@ -125,7 +127,7 @@ export default function Header() {
             <ListItem
               sx={(theme) => ({ bgcolor: theme.palette.background.paper })}
               onClick={() => {
-                reset();
+                handleReset();
                 setDrawerOpen(false);
               }}
             >
@@ -142,7 +144,6 @@ export default function Header() {
             </ListItem>
           </>
         )}
-        {/* </Box> */}
         <Box sx={{ mt: 2, display: "flex", alignItems: "center", gap: 1 }}>
           <LightModeIcon />
           <Switch checked={mode === "dark"} onChange={toggleMode} />
@@ -222,7 +223,7 @@ export default function Header() {
                   <HoverButton onClick={handleProfile} sx={{ color: "white" }}>
                     Profile
                   </HoverButton>
-                  <HoverButton onClick={reset} sx={{ color: "white" }}>
+                  <HoverButton onClick={handleReset} sx={{ color: "white" }}>
                     Reset Session
                   </HoverButton>
                   <HoverButton

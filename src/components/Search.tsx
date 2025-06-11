@@ -12,6 +12,7 @@ import {
   APIClanDB,
   APIRestUserDB,
   APIRegion,
+  APICommands,
 } from "../api/generated/";
 import { Divider, InputAdornment, SelectChangeEvent } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -32,7 +33,15 @@ const GroupItems = styled("ul")({
   padding: 0,
 });
 
-export default function Search() {
+export default function Search({
+  AdminFunction,
+}: {
+  AdminFunction?: (
+    command: APICommands,
+    region?: APIRegion,
+    args?: string
+  ) => void;
+}) {
   const searchPlayers = async (query: string) => {
     const request = await PlayerApiFp().searchSearchGet(query);
     return (await request()).data; // или return (await request()).data
@@ -51,6 +60,23 @@ export default function Search() {
   const changeRegion = (event: SelectChangeEvent) => {
     const value = event.target.value as APIRegion;
     setRegion(value);
+  };
+
+  const handleChange = (_: any, value: any) => {
+    if (!value) return;
+    const param =
+      value.group === "Clans" && "tag" in value ? value.tag : value.name;
+    const command =
+      value.group === "Clans" ? APICommands.ResetClan : APICommands.ResetUser;
+
+    if (AdminFunction) {
+      AdminFunction(command, value.region, param);
+      return;
+    }
+
+    navigate(
+      `/${region}/${value.group === "Clans" ? "clan" : "player"}/${param}`
+    );
   };
 
   let timeout: ReturnType<typeof setTimeout>;
@@ -111,14 +137,7 @@ export default function Search() {
     <>
       <Autocomplete
         options={options}
-        onChange={(_, value) => {
-          if (!value) return;
-          if (value.group === "Clans" && "tag" in value) {
-            navigate(`/${region}/clan/${value.tag}`);
-          } else {
-            navigate(`/${region}/player/${value.name}`);
-          }
-        }}
+        onChange={handleChange}
         onInputChange={(_, value, reason) => {
           if (reason !== "input") return;
           handlerSearch(value);

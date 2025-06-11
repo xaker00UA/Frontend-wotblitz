@@ -6,6 +6,7 @@ common.ts
 configuration.ts
 git_push.sh
 index.ts
+models/apiadmin-stats.ts
 models/apiauth-login.ts
 models/apiauth-verify.ts
 models/apibase-stats.ts
@@ -21,6 +22,8 @@ models/apiitem-tank.ts
 models/apilast-battle-time.ts
 models/apilevel.ts
 models/apilogin-form.ts
+models/apimedal.ts
+models/apimedals.ts
 models/apinow.ts
 models/apiparameter.ts
 models/apiplayer-model.ts
@@ -41,6 +44,7 @@ models/apistats-tank.ts
 models/apitime.ts
 models/apitop-player.ts
 models/apiupdate.ts
+models/apivalue.ts
 models/index.ts
 service/admin-api.ts
 service/auth-api.ts

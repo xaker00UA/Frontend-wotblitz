@@ -1,3 +1,4 @@
+export * from './apiadmin-stats';
 export * from './apiauth-login';
 export * from './apiauth-verify';
 export * from './apibase-stats';
@@ -13,6 +14,8 @@ export * from './apiitem-tank';
 export * from './apilast-battle-time';
 export * from './apilevel';
 export * from './apilogin-form';
+export * from './apimedal';
+export * from './apimedals';
 export * from './apinow';
 export * from './apiparameter';
 export * from './apiplayer-model';
@@ -33,3 +36,4 @@ export * from './apistats-tank';
 export * from './apitime';
 export * from './apitop-player';
 export * from './apiupdate';
+export * from './apivalue';

@@ -28,7 +28,7 @@ interface Props {
   tanks: Tank[] | null;
 }
 
-const placeholderImg = "https://via.placeholder.com/300x140?text=No+Image";
+const placeholderImg = "https://placeimg.com/300/140/any";
 
 export default function TankGrid({ tanks }: Props) {
   if (!tanks) return null;

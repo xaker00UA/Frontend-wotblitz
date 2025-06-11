@@ -2,7 +2,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { AuthApiFp, PlayerApiFp } from "../api/generated/api";
 import { APIRegion, APIRestUserDB } from "../api/generated";
-import { useAsyncError, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 type AuthContextType = {
   isAuthenticated: boolean;
   user: APIRestUserDB | null;
@@ -64,6 +64,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const reset = async () => {
     const request = await PlayerApiFp().resetResetGet();
+
     try {
       return (await request()).data;
     } catch (e) {

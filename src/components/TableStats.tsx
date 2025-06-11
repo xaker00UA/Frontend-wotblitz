@@ -5,7 +5,6 @@ import {
   TableHead,
   TableRow,
   TableSortLabel,
-  Paper,
   TableContainer,
 } from "@mui/material";
 import TableFooter from "@mui/material/TableFooter";
@@ -17,7 +16,6 @@ import {
 } from "../api/generated";
 import { getColor, StatKey } from "../helper/GetColor";
 import { useState } from "react";
-import { fontSize, fontStyle } from "@mui/system";
 interface Props {
   stats: APIGeneralTanks | APIRestClan | null;
 }
@@ -50,8 +48,6 @@ export default function TableStats({ stats }: Props) {
 
   if (isClan(stats)) {
     if (stats.members.length === 0) return null;
-
-    // data.push({ name: "general", ...stats.general });
 
     const memberData = stats.members
       .filter((member) => member.general?.all != null)
@@ -159,7 +155,7 @@ export default function TableStats({ stats }: Props) {
                         color: getColor(
                           undefined,
                           key as StatKey,
-                          Number(stats.general[key]) // Проверяем, существует ли значение
+                          Number(stats.general[key])
                         ),
                       }}
                       key={key}
@@ -172,8 +168,7 @@ export default function TableStats({ stats }: Props) {
                 })}
             </TableRow>
           </TableFooter>
-        ) : null}{" "}
-        {/* Используем null вместо пустого фрагмента */}
+        ) : null}
       </Table>
     </TableContainer>
   );

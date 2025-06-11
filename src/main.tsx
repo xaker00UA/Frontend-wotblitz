@@ -5,7 +5,7 @@ import { RouterProvider } from "react-router";
 import { router } from "./routes.tsx";
 import { ThemeProvider } from "./hooks/ThemeContext";
 import { CssBaseline, GlobalStyles } from "@mui/material";
-import { ErrorProvider } from "./hooks/ErrorContext.tsx";
+import { NotificationProvider } from "./hooks/ErrorContext.tsx";
 
 const root = document.getElementById("root");
 
@@ -24,8 +24,8 @@ ReactDOM.createRoot(root as HTMLElement).render(
         },
       })}
     />
-    <ErrorProvider>
+    <NotificationProvider>
       <RouterProvider router={router} />
-    </ErrorProvider>
+    </NotificationProvider>
   </ThemeProvider>
 );
