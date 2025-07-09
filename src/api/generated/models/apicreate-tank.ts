@@ -15,51 +15,49 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { APIParameter } from './apiparameter';
-// May contain unused imports in some cases
-// @ts-ignore
-import type { APIRegion } from './apiregion';
-// May contain unused imports in some cases
-// @ts-ignore
-import type { APIValue } from './apivalue';
+import type { APIImages } from './apiimages';
 
 /**
  * 
  * @export
- * @interface APITopPlayer
+ * @interface APICreateTank
  */
-export interface APITopPlayer {
+export interface APICreateTank {
     /**
      * 
-     * @type {APIRegion}
-     * @memberof APITopPlayer
+     * @type {number}
+     * @memberof APICreateTank
      */
-    'region': APIRegion;
+    'tank_id': number;
     /**
      * 
      * @type {string}
-     * @memberof APITopPlayer
+     * @memberof APICreateTank
      */
     'name': string;
     /**
      * 
+     * @type {string}
+     * @memberof APICreateTank
+     */
+    'nation': string;
+    /**
+     * 
      * @type {number}
-     * @memberof APITopPlayer
+     * @memberof APICreateTank
      */
-    'player_id': number;
+    'tier': number;
     /**
      * 
-     * @type {APIParameter}
-     * @memberof APITopPlayer
+     * @type {boolean}
+     * @memberof APICreateTank
      */
-    'parameter': APIParameter;
+    'is_premium': boolean;
     /**
      * 
-     * @type {APIValue}
-     * @memberof APITopPlayer
+     * @type {APIImages}
+     * @memberof APICreateTank
      */
-    'value': APIValue;
+    'images'?: APIImages;
 }
-
-
 

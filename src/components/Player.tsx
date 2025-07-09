@@ -117,6 +117,7 @@ export default function PlayerStack({ region, nickname }: Props) {
     if (!from || !to) return;
     const fetchPeriod = async () => {
       try {
+        setDetLoading(true);
         const request = await StatsApiFp().getPeriodRegionPlayerPeriodGet(
           region as APIRegion,
           nickname,
@@ -131,6 +132,8 @@ export default function PlayerStack({ region, nickname }: Props) {
         const error = err as AxiosError<any>;
         const messages = error.response?.data?.detail ?? "period error";
         addError(messages);
+      } finally {
+        setDetLoading(false);
       }
     };
     fetchPeriod();
@@ -147,11 +150,19 @@ export default function PlayerStack({ region, nickname }: Props) {
             onChangeTo={setTo}
           />
         </LocalizationProvider>
-        <LinearProgress
-          style={{ visibility: autoRefresh ? "visible" : "hidden" }}
-          variant="determinate"
-          value={progress}
-        />
+        <Box>
+          <LinearProgress
+            style={{ visibility: autoRefresh ? "visible" : "hidden" }}
+            variant="determinate"
+            value={progress}
+          />
+          {details?.time && (
+            <Timer
+              sx={{ justifyContent: "center" }}
+              timeInSeconds={details?.time}
+            />
+          )}
+        </Box>
 
         <Box
           sx={{

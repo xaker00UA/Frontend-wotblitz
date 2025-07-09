@@ -26,6 +26,8 @@ import type { APIAdminStats } from '../models';
 // @ts-ignore
 import type { APICommand } from '../models';
 // @ts-ignore
+import type { APICreateTank } from '../models';
+// @ts-ignore
 import type { APIErrorResponse } from '../models';
 // @ts-ignore
 import type { APILoginForm } from '../models';
@@ -35,6 +37,58 @@ import type { APILoginForm } from '../models';
  */
 export const AdminApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
+        /**
+         * 
+         * @summary Add Tank
+         * @param {APICreateTank} tank 
+         * @param {string} [adminToken] 
+         * @param {File | null} [imageBig] 
+         * @param {File | null} [imageSmall] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addTankAdminAddTankPost: async (tank: APICreateTank, adminToken?: string, imageBig?: File | null, imageSmall?: File | null, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'tank' is not null or undefined
+            assertParamExists('addTankAdminAddTankPost', 'tank', tank)
+            const localVarPath = `/admin/add_tank`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+            const localVarFormParams = new ((configuration && configuration.formDataCtor) || FormData)();
+
+
+            if (tank !== undefined) { 
+                localVarFormParams.append('tank', new Blob([JSON.stringify(tank)], { type: "application/json", }));
+            }
+    
+            if (imageBig !== undefined) { 
+                localVarFormParams.append('image_big', imageBig as any);
+            }
+    
+            if (imageSmall !== undefined) { 
+                localVarFormParams.append('image_small', imageSmall as any);
+            }
+    
+    
+            localVarHeaderParameter['Content-Type'] = 'multipart/form-data';
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = localVarFormParams;
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
         /**
          * 
          * @summary Info
@@ -217,6 +271,22 @@ export const AdminApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
+         * @summary Add Tank
+         * @param {APICreateTank} tank 
+         * @param {string} [adminToken] 
+         * @param {File | null} [imageBig] 
+         * @param {File | null} [imageSmall] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async addTankAdminAddTankPost(tank: APICreateTank, adminToken?: string, imageBig?: File | null, imageSmall?: File | null, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<APICreateTank>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.addTankAdminAddTankPost(tank, adminToken, imageBig, imageSmall, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.addTankAdminAddTankPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @summary Info
          * @param {number} [limit] 
          * @param {string} [adminToken] 
@@ -293,6 +363,16 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
     return {
         /**
          * 
+         * @summary Add Tank
+         * @param {AdminApiAddTankAdminAddTankPostRequest} requestParameters Request parameters.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addTankAdminAddTankPost(requestParameters: AdminApiAddTankAdminAddTankPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<APICreateTank> {
+            return localVarFp.addTankAdminAddTankPost(requestParameters.tank, requestParameters.adminToken, requestParameters.imageBig, requestParameters.imageSmall, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Info
          * @param {AdminApiInfoAdminInfoGetRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
@@ -342,6 +422,41 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
         },
     };
 };
+
+/**
+ * Request parameters for addTankAdminAddTankPost operation in AdminApi.
+ * @export
+ * @interface AdminApiAddTankAdminAddTankPostRequest
+ */
+export interface AdminApiAddTankAdminAddTankPostRequest {
+    /**
+     * 
+     * @type {APICreateTank}
+     * @memberof AdminApiAddTankAdminAddTankPost
+     */
+    readonly tank: APICreateTank
+
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminApiAddTankAdminAddTankPost
+     */
+    readonly adminToken?: string
+
+    /**
+     * 
+     * @type {File}
+     * @memberof AdminApiAddTankAdminAddTankPost
+     */
+    readonly imageBig?: File | null
+
+    /**
+     * 
+     * @type {File}
+     * @memberof AdminApiAddTankAdminAddTankPost
+     */
+    readonly imageSmall?: File | null
+}
 
 /**
  * Request parameters for infoAdminInfoGet operation in AdminApi.
@@ -420,6 +535,18 @@ export interface AdminApiVerifyTokenAdminVerifyGetRequest {
  * @extends {BaseAPI}
  */
 export class AdminApi extends BaseAPI {
+    /**
+     * 
+     * @summary Add Tank
+     * @param {AdminApiAddTankAdminAddTankPostRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AdminApi
+     */
+    public addTankAdminAddTankPost(requestParameters: AdminApiAddTankAdminAddTankPostRequest, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).addTankAdminAddTankPost(requestParameters.tank, requestParameters.adminToken, requestParameters.imageBig, requestParameters.imageSmall, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * 
      * @summary Info

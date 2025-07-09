@@ -80,6 +80,61 @@ export const ClanApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * 
+         * @summary Get Period Clan
+         * @param {APIRegion} region 
+         * @param {string} name 
+         * @param {number} endDay 
+         * @param {number} startDay 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getPeriodClanRegionClanPeriodGet: async (region: APIRegion, name: string, endDay: number, startDay: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'region' is not null or undefined
+            assertParamExists('getPeriodClanRegionClanPeriodGet', 'region', region)
+            // verify required parameter 'name' is not null or undefined
+            assertParamExists('getPeriodClanRegionClanPeriodGet', 'name', name)
+            // verify required parameter 'endDay' is not null or undefined
+            assertParamExists('getPeriodClanRegionClanPeriodGet', 'endDay', endDay)
+            // verify required parameter 'startDay' is not null or undefined
+            assertParamExists('getPeriodClanRegionClanPeriodGet', 'startDay', startDay)
+            const localVarPath = `/{region}/clan/period`
+                .replace(`{${"region"}}`, encodeURIComponent(String(region)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (name !== undefined) {
+                localVarQueryParameter['name'] = name;
+            }
+
+            if (endDay !== undefined) {
+                localVarQueryParameter['end_day'] = endDay;
+            }
+
+            if (startDay !== undefined) {
+                localVarQueryParameter['start_day'] = startDay;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Search Clan
          * @param {string} name 
          * @param {*} [options] Override http request option.
@@ -186,6 +241,22 @@ export const ClanApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Get Period Clan
+         * @param {APIRegion} region 
+         * @param {string} name 
+         * @param {number} endDay 
+         * @param {number} startDay 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getPeriodClanRegionClanPeriodGet(region: APIRegion, name: string, endDay: number, startDay: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<APIRestClan>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getPeriodClanRegionClanPeriodGet(region, name, endDay, startDay, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ClanApi.getPeriodClanRegionClanPeriodGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @summary Search Clan
          * @param {string} name 
          * @param {*} [options] Override http request option.
@@ -234,6 +305,16 @@ export const ClanApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * 
+         * @summary Get Period Clan
+         * @param {ClanApiGetPeriodClanRegionClanPeriodGetRequest} requestParameters Request parameters.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getPeriodClanRegionClanPeriodGet(requestParameters: ClanApiGetPeriodClanRegionClanPeriodGetRequest, options?: RawAxiosRequestConfig): AxiosPromise<APIRestClan> {
+            return localVarFp.getPeriodClanRegionClanPeriodGet(requestParameters.region, requestParameters.name, requestParameters.endDay, requestParameters.startDay, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Search Clan
          * @param {ClanApiSearchClanClanSearchGetRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
@@ -274,6 +355,41 @@ export interface ClanApiGetClanSessionRegionClanGetRequest {
      * @memberof ClanApiGetClanSessionRegionClanGet
      */
     readonly name: string
+}
+
+/**
+ * Request parameters for getPeriodClanRegionClanPeriodGet operation in ClanApi.
+ * @export
+ * @interface ClanApiGetPeriodClanRegionClanPeriodGetRequest
+ */
+export interface ClanApiGetPeriodClanRegionClanPeriodGetRequest {
+    /**
+     * 
+     * @type {APIRegion}
+     * @memberof ClanApiGetPeriodClanRegionClanPeriodGet
+     */
+    readonly region: APIRegion
+
+    /**
+     * 
+     * @type {string}
+     * @memberof ClanApiGetPeriodClanRegionClanPeriodGet
+     */
+    readonly name: string
+
+    /**
+     * 
+     * @type {number}
+     * @memberof ClanApiGetPeriodClanRegionClanPeriodGet
+     */
+    readonly endDay: number
+
+    /**
+     * 
+     * @type {number}
+     * @memberof ClanApiGetPeriodClanRegionClanPeriodGet
+     */
+    readonly startDay: number
 }
 
 /**
@@ -335,6 +451,18 @@ export class ClanApi extends BaseAPI {
      */
     public getClanSessionRegionClanGet(requestParameters: ClanApiGetClanSessionRegionClanGetRequest, options?: RawAxiosRequestConfig) {
         return ClanApiFp(this.configuration).getClanSessionRegionClanGet(requestParameters.region, requestParameters.name, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Get Period Clan
+     * @param {ClanApiGetPeriodClanRegionClanPeriodGetRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ClanApi
+     */
+    public getPeriodClanRegionClanPeriodGet(requestParameters: ClanApiGetPeriodClanRegionClanPeriodGetRequest, options?: RawAxiosRequestConfig) {
+        return ClanApiFp(this.configuration).getPeriodClanRegionClanPeriodGet(requestParameters.region, requestParameters.name, requestParameters.endDay, requestParameters.startDay, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

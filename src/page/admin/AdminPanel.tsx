@@ -21,13 +21,14 @@ import {
 import { useError, useSuccess } from "../../hooks/ErrorContext";
 import Search from "../../components/Search";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import CreateTankModal from "./FormCreateTank";
 export default function AdminPanel() {
   const api = AdminApiFp();
   const addError = useError();
   const addSuccess = useSuccess();
   const navigate = useNavigate();
   const [data, setData] = useState<APIAdminStats | null>(null);
-
+  const [open, setOpen] = useState(false);
   const theme = useTheme();
 
   const verify = async () => {
@@ -55,6 +56,23 @@ export default function AdminPanel() {
     adminInfo();
     verify();
   }, []);
+
+  const handleSendCrateTank = async (data: any) => {
+    try {
+      const request = await api.addTankAdminAddTankPost(
+        data,
+        undefined,
+        data.image_big,
+        data.image_small
+      );
+      await request();
+      addSuccess("Танк успешно добавлен");
+    } catch (err) {
+      const error = err as AxiosError<any>;
+      const messages = error.response?.data?.detail ?? "";
+      addError(messages);
+    }
+  };
 
   const handleCommand = async (
     command: APICommands,
@@ -126,9 +144,15 @@ export default function AdminPanel() {
                   label="Обновить бд игроков"
                   onExecute={handleCommand}
                 />
+                <Button onClick={() => setOpen(true)}>Добавить танк</Button>
               </Stack>
             </Stack>
           </Paper>
+          <CreateTankModal
+            open={open}
+            onSubmit={handleSendCrateTank}
+            onClose={() => setOpen(false)}
+          />
         </Box>
 
         {/* Правая колонка (Информация - 1/3) */}

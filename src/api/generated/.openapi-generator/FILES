@@ -13,6 +13,7 @@ models/apiclan-db.ts
 models/apiclan-top.ts
 models/apicommand.ts
 models/apicommands.ts
+models/apicreate-tank.ts
 models/apierror-response.ts
 models/apigeneral-tanks.ts
 models/apigeneral.ts
@@ -40,7 +41,6 @@ models/apirest-user.ts
 models/apisession.ts
 models/apistatistics.ts
 models/apistats-tank.ts
-models/apitime.ts
 models/apitop-player.ts
 models/apiupdate.ts
 models/apivalue.ts

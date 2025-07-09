@@ -19,9 +19,6 @@ import type { APIBaseStats } from './apibase-stats';
 // May contain unused imports in some cases
 // @ts-ignore
 import type { APIRestMember } from './apirest-member';
-// May contain unused imports in some cases
-// @ts-ignore
-import type { APITime } from './apitime';
 
 /**
  * 
@@ -73,9 +70,9 @@ export interface APIRestClan {
     'general': APIBaseStats;
     /**
      * 
-     * @type {APITime}
+     * @type {number}
      * @memberof APIRestClan
      */
-    'time': APITime | null;
+    'time': number;
 }
 
