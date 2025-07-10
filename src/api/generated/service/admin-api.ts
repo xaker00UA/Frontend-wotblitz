@@ -40,16 +40,28 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
         /**
          * 
          * @summary Add Tank
-         * @param {APICreateTank} tank 
+         * @param {number} tankId 
+         * @param {string} name 
+         * @param {string} nation 
+         * @param {number} tier 
+         * @param {boolean} isPremium 
          * @param {string} [adminToken] 
          * @param {File | null} [imageBig] 
          * @param {File | null} [imageSmall] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        addTankAdminAddTankPost: async (tank: APICreateTank, adminToken?: string, imageBig?: File | null, imageSmall?: File | null, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'tank' is not null or undefined
-            assertParamExists('addTankAdminAddTankPost', 'tank', tank)
+        addTankAdminAddTankPost: async (tankId: number, name: string, nation: string, tier: number, isPremium: boolean, adminToken?: string, imageBig?: File | null, imageSmall?: File | null, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'tankId' is not null or undefined
+            assertParamExists('addTankAdminAddTankPost', 'tankId', tankId)
+            // verify required parameter 'name' is not null or undefined
+            assertParamExists('addTankAdminAddTankPost', 'name', name)
+            // verify required parameter 'nation' is not null or undefined
+            assertParamExists('addTankAdminAddTankPost', 'nation', nation)
+            // verify required parameter 'tier' is not null or undefined
+            assertParamExists('addTankAdminAddTankPost', 'tier', tier)
+            // verify required parameter 'isPremium' is not null or undefined
+            assertParamExists('addTankAdminAddTankPost', 'isPremium', isPremium)
             const localVarPath = `/admin/add_tank`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -64,8 +76,24 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
             const localVarFormParams = new ((configuration && configuration.formDataCtor) || FormData)();
 
 
-            if (tank !== undefined) { 
-                localVarFormParams.append('tank', new Blob([JSON.stringify(tank)], { type: "application/json", }));
+            if (tankId !== undefined) { 
+                localVarFormParams.append('tank_id', tankId as any);
+            }
+    
+            if (name !== undefined) { 
+                localVarFormParams.append('name', name as any);
+            }
+    
+            if (nation !== undefined) { 
+                localVarFormParams.append('nation', nation as any);
+            }
+    
+            if (tier !== undefined) { 
+                localVarFormParams.append('tier', tier as any);
+            }
+    
+            if (isPremium !== undefined) { 
+                localVarFormParams.append('is_premium', String(isPremium) as any);
             }
     
             if (imageBig !== undefined) { 
@@ -272,15 +300,19 @@ export const AdminApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Add Tank
-         * @param {APICreateTank} tank 
+         * @param {number} tankId 
+         * @param {string} name 
+         * @param {string} nation 
+         * @param {number} tier 
+         * @param {boolean} isPremium 
          * @param {string} [adminToken] 
          * @param {File | null} [imageBig] 
          * @param {File | null} [imageSmall] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async addTankAdminAddTankPost(tank: APICreateTank, adminToken?: string, imageBig?: File | null, imageSmall?: File | null, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<APICreateTank>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.addTankAdminAddTankPost(tank, adminToken, imageBig, imageSmall, options);
+        async addTankAdminAddTankPost(tankId: number, name: string, nation: string, tier: number, isPremium: boolean, adminToken?: string, imageBig?: File | null, imageSmall?: File | null, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<APICreateTank>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.addTankAdminAddTankPost(tankId, name, nation, tier, isPremium, adminToken, imageBig, imageSmall, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AdminApi.addTankAdminAddTankPost']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -369,7 +401,7 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
          * @throws {RequiredError}
          */
         addTankAdminAddTankPost(requestParameters: AdminApiAddTankAdminAddTankPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<APICreateTank> {
-            return localVarFp.addTankAdminAddTankPost(requestParameters.tank, requestParameters.adminToken, requestParameters.imageBig, requestParameters.imageSmall, options).then((request) => request(axios, basePath));
+            return localVarFp.addTankAdminAddTankPost(requestParameters.tankId, requestParameters.name, requestParameters.nation, requestParameters.tier, requestParameters.isPremium, requestParameters.adminToken, requestParameters.imageBig, requestParameters.imageSmall, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -431,10 +463,38 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
 export interface AdminApiAddTankAdminAddTankPostRequest {
     /**
      * 
-     * @type {APICreateTank}
+     * @type {number}
      * @memberof AdminApiAddTankAdminAddTankPost
      */
-    readonly tank: APICreateTank
+    readonly tankId: number
+
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminApiAddTankAdminAddTankPost
+     */
+    readonly name: string
+
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminApiAddTankAdminAddTankPost
+     */
+    readonly nation: string
+
+    /**
+     * 
+     * @type {number}
+     * @memberof AdminApiAddTankAdminAddTankPost
+     */
+    readonly tier: number
+
+    /**
+     * 
+     * @type {boolean}
+     * @memberof AdminApiAddTankAdminAddTankPost
+     */
+    readonly isPremium: boolean
 
     /**
      * 
@@ -544,7 +604,7 @@ export class AdminApi extends BaseAPI {
      * @memberof AdminApi
      */
     public addTankAdminAddTankPost(requestParameters: AdminApiAddTankAdminAddTankPostRequest, options?: RawAxiosRequestConfig) {
-        return AdminApiFp(this.configuration).addTankAdminAddTankPost(requestParameters.tank, requestParameters.adminToken, requestParameters.imageBig, requestParameters.imageSmall, options).then((request) => request(this.axios, this.basePath));
+        return AdminApiFp(this.configuration).addTankAdminAddTankPost(requestParameters.tankId, requestParameters.name, requestParameters.nation, requestParameters.tier, requestParameters.isPremium, requestParameters.adminToken, requestParameters.imageBig, requestParameters.imageSmall, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

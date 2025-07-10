@@ -33,10 +33,10 @@ const CreateTankModal: React.FC<CreateTankModalProps> = ({
   onClose,
   onSubmit,
 }) => {
-  const [tankId, setTankId] = useState<number>(0);
+  const [tankId, setTankId] = useState<number>(1);
   const [name, setName] = useState<string>("");
   const [nation, setNation] = useState<string>("");
-  const [tier, setTier] = useState<number>(0);
+  const [tier, setTier] = useState<number>(1);
   const [isPremium, setIsPremium] = useState<boolean>(false);
   const [imageBig, setImageBig] = useState<File | null>(null);
   const [imageSmall, setImageSmall] = useState<File | null>(null);
@@ -52,10 +52,10 @@ const CreateTankModal: React.FC<CreateTankModalProps> = ({
       image_small: imageSmall,
     });
     // сброс
-    setTankId(0);
+    setTankId(1);
     setName("");
     setNation("");
-    setTier(0);
+    setTier(1);
     setIsPremium(false);
     setImageBig(null);
     setImageSmall(null);
@@ -98,6 +98,7 @@ const CreateTankModal: React.FC<CreateTankModalProps> = ({
             type="number"
             value={tankId}
             onChange={(e) => setTankId(Number(e.target.value))}
+            slotProps={{ htmlInput: { min: 1, step: 1 } }}
             fullWidth
           />
           <TextField
@@ -117,6 +118,7 @@ const CreateTankModal: React.FC<CreateTankModalProps> = ({
             type="number"
             value={tier}
             onChange={(e) => setTier(Number(e.target.value))}
+            slotProps={{ htmlInput: { min: 1, step: 1, max: 10 } }}
             fullWidth
           />
           <FormControlLabel

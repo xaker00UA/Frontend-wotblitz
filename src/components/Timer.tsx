@@ -1,5 +1,5 @@
 import React from "react";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
 interface TimerProps {
   timeInSeconds: number;
@@ -25,5 +25,11 @@ export const Timer: React.FC<TimerProps> = ({ timeInSeconds, sx }) => {
     return parts.join(":");
   };
 
-  return <Box sx={{ flex: 1, ...sx }}>{formatTime(timeInSeconds)}</Box>;
+  return (
+    <Box sx={{ display: "flex", justifyContent: "center", flex: 1, ...sx }}>
+      <Typography variant="h6">
+        Сессия длиться: {formatTime(timeInSeconds)}
+      </Typography>
+    </Box>
+  );
 };

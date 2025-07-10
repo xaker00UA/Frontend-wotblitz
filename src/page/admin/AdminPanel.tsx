@@ -60,16 +60,19 @@ export default function AdminPanel() {
   const handleSendCrateTank = async (data: any) => {
     try {
       const request = await api.addTankAdminAddTankPost(
-        data,
+        data.tank_id,
+        data.name,
+        data.nation,
+        data.tier,
+        data.is_premium,
         undefined,
-        data.image_big,
-        data.image_small
+        data.image_big ? data.image_big : undefined,
+        data.image_small ? data.image_small : undefined
       );
       await request();
       addSuccess("Танк успешно добавлен");
     } catch (err) {
-      const error = err as AxiosError<any>;
-      const messages = error.response?.data?.detail ?? "";
+      const messages = "Ошибка добавления танка";
       addError(messages);
     }
   };

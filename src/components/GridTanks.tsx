@@ -127,6 +127,7 @@ export default function TankGrid({ tanks }: Props) {
           <Grid
             size={{ lg: 2, sm: 4, md: 3, xs: 6 }}
             ref={index === visibleTanks - 1 ? lastElementRef : null}
+            data-tank-id={tank.tank_id}
             key={tank.tank_id}
           >
             <Card
