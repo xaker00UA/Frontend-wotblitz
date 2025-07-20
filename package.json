@@ -10,33 +10,40 @@
     "preview": "vite preview",
     "gen": "openapi-generator-cli generate"
   },
+  "overrides": {
+    "ini": "^1.3.6"
+  },
   "dependencies": {
     "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.0",
-    "@mui/icons-material": "^7.0.2",
-    "@mui/material": "^7.1.1",
-    "@mui/styled-engine-sc": "^7.0.2",
+    "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^7.2.0",
+    "@mui/material": "^7.2.0",
+    "@mui/styled-engine-sc": "^7.2.0",
     "@mui/styles": "^6.4.11",
-    "@mui/system": "^7.0.2",
-    "@mui/x-date-pickers": "^8.5.1",
-    "axios": "^1.8.4",
+    "@mui/system": "^7.2.0",
+    "@mui/x-date-pickers": "^8.9.0",
+    "axios": "^1.10.0",
     "date-fns": "^4.1.0",
+    "eslint": "^9.31.0",
     "gen": "^1.6.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-router-dom": "^7.5.1",
-    "styled-components": "^6.1.17"
+    "glob": "^11.0.3",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-dropzone": "^14.3.8",
+    "react-router-dom": "^7.7.0",
+    "rimraf": "^6.0.1",
+    "styled-components": "^6.1.19"
   },
   "devDependencies": {
-    "@eslint/js": "^9.22.0",
-    "@types/react": "^19.0.10",
-    "@types/react-dom": "^19.0.4",
-    "@vitejs/plugin-react": "^4.3.4",
+    "@eslint/js": "^9.31.0",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@vitejs/plugin-react": "^4.7.0",
     "eslint-plugin-react-hooks": "^5.2.0",
-    "eslint-plugin-react-refresh": "^0.4.19",
-    "globals": "^16.0.0",
-    "typescript": "~5.7.2",
-    "typescript-eslint": "^7.3.1",
-    "vite": "^6.3.1"
+    "eslint-plugin-react-refresh": "^0.4.20",
+    "globals": "^16.3.0",
+    "typescript": "~5.8.3",
+    "typescript-eslint": "^8.37.0",
+    "vite": "^7.0.5"
   }
 }
