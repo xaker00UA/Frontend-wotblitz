@@ -34,11 +34,16 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
           ...(mode === "dark"
             ? {
                 background: {
-                  default: "#000000",
-                  paper: "#121212",
+                  default: "#121212",
+                  paper: "#1e1e1e",
                 },
               }
-            : {}),
+            : {
+                background: {
+                  default: "#fff",
+                  paper: "#eaeaea",
+                },
+              }),
         },
       }),
     [mode]

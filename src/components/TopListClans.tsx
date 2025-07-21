@@ -19,10 +19,13 @@ const FlexBox = styled("div")`
   justify-content: center;
   padding: 20px;
   flex-wrap: wrap;
+  max-width: 1440px;
+  width: 100%;
+  margin: 0 auto;
+  overflow: auto;
 `;
 
 const StyledCard = styled(Card)`
-  /* width: 300px; */
   flex: 1;
   text-align: center;
   border-radius: 20px;
@@ -80,78 +83,77 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ title, data }) => {
   const navigate = useNavigate();
 
   return (
-    <Tooltip title={"asda"} placement="top">
-      <StyledCard>
-        <CardContent>
-          <Typography variant="h6" gutterBottom>
-            {title}
-          </Typography>
+    <StyledCard>
+      <CardContent>
+        <Typography variant="h6" gutterBottom>
+          {title}
+        </Typography>
 
-          {/* Заголовки для колонок */}
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              px: 2,
-              mb: 1,
-              fontWeight: "bold",
-              color: "text.secondary",
-            }}
-          >
-            <Box sx={{ flex: 2 }}>Клан</Box>
-            <Box sx={{ flex: 1, textAlign: "right" }}>Рейтинг</Box>
-            <Box sx={{ flex: 1, textAlign: "right" }}>Бои</Box>
-            <Box sx={{ flex: 1, textAlign: "right" }}>Победы %</Box>
-            <Box sx={{ flex: 1, textAlign: "right" }}>Урон</Box>
-          </Box>
+        {/* Заголовки для колонок */}
+        <Box
+          sx={{
+            display: "flex",
+            width: "100%",
+            justifyContent: "space-between",
+            px: 2,
+            mb: 1,
+            fontWeight: "bold",
+            color: "text.secondary",
+          }}
+        >
+          <Box sx={{ flex: 2 }}>Клан</Box>
+          <Box sx={{ flex: 1, textAlign: "right" }}>Рейтинг</Box>
+          <Box sx={{ flex: 1, textAlign: "right" }}>Бои</Box>
+          <Box sx={{ flex: 1, textAlign: "right" }}>Победы %</Box>
+          <Box sx={{ flex: 1, textAlign: "right" }}>Урон</Box>
+        </Box>
 
-          <List disablePadding>
-            {data.slice(0, 10).map((item) => {
-              const clanUrl = `/${item.region}/clan/${item.tag}`;
-              return (
-                <StyledListItem
-                  key={`${item.region}-${item.clan_id}`}
-                  onClick={() => navigate(clanUrl)}
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <ListItemText
-                    primary={
-                      <Link
-                        href={clanUrl}
-                        onClick={(e) => e.stopPropagation()}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        underline="hover"
-                        color="inherit"
-                      >
-                        {item.name}
-                      </Link>
-                    }
-                    sx={{ flex: 2 }}
-                  />
-                  <span style={{ flex: 1, textAlign: "right" }}>
-                    {item.rating}
-                  </span>
-                  <span style={{ flex: 1, textAlign: "right" }}>
-                    {item.general_battles}
-                  </span>
-                  <span style={{ flex: 1, textAlign: "right" }}>
-                    {item.general_wins}
-                  </span>
-                  <span style={{ flex: 1, textAlign: "right" }}>
-                    {item.averageDamage}
-                  </span>
-                </StyledListItem>
-              );
-            })}
-          </List>
-        </CardContent>
-      </StyledCard>
-    </Tooltip>
+        <List disablePadding>
+          {data.slice(0, 10).map((item) => {
+            const clanUrl = `/${item.region}/clan/${item.tag}`;
+            return (
+              <StyledListItem
+                key={`${item.region}-${item.clan_id}`}
+                onClick={() => navigate(clanUrl)}
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <ListItemText
+                  primary={
+                    <Link
+                      href={clanUrl}
+                      onClick={(e) => e.stopPropagation()}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      underline="hover"
+                      color="inherit"
+                    >
+                      {item.name}
+                    </Link>
+                  }
+                  sx={{ flex: 2 }}
+                />
+                <span style={{ flex: 1, textAlign: "right" }}>
+                  {item.rating}
+                </span>
+                <span style={{ flex: 1, textAlign: "right" }}>
+                  {item.general_battles}
+                </span>
+                <span style={{ flex: 1, textAlign: "right" }}>
+                  {item.general_wins}
+                </span>
+                <span style={{ flex: 1, textAlign: "right" }}>
+                  {item.averageDamage}
+                </span>
+              </StyledListItem>
+            );
+          })}
+        </List>
+      </CardContent>
+    </StyledCard>
   );
 };
 

@@ -47,7 +47,7 @@ export default function Header() {
   const { mode, toggleMode } = useThemeMode();
   const { isAuthenticated, logout, reset } = useAuth();
   const { confirm } = useConfirmation();
-  const isDesktop = useMediaQuery((theme) => theme.breakpoints.up("md"));
+  const isDesktop = useMediaQuery((theme) => theme.breakpoints.up("lg"));
   const navigate = useNavigate();
   const location = useLocation();
 

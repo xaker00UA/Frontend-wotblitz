@@ -35,7 +35,7 @@ export default function TopClanPage() {
   }, [startDay, limit]);
 
   return (
-    <Box sx={{ width: "100%" }}>
+    <Box>
       <TopClanList data={data} />
     </Box>
   );
