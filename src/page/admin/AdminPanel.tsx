@@ -79,14 +79,12 @@ export default function AdminPanel() {
 
   const handleCommand = async (
     command: APICommands,
-    region?: APIRegion,
-    args?: string
+    args?: Record<string, any>
   ) => {
     try {
       const request = await api.protectedRouteAdminCommandsPost({
         command: command,
-        region: region,
-        arguments: args, // или выбирай из select
+        arguments: args,
       });
       await request();
       addSuccess("Команда успешно выполнена");
@@ -140,11 +138,22 @@ export default function AdminPanel() {
                   label="Обновить бд кланов"
                   onExecute={handleCommand}
                 />
-
+                <ProgressButton
+                  command={APICommands.UpdateClanAllDb}
+                  duration={50 * 1000}
+                  label="Обновить всю бд кланов"
+                  onExecute={handleCommand}
+                />
                 <ProgressButton
                   command={APICommands.UpdatePlayerDb}
-                  duration={130 * 1000}
+                  duration={50 * 1000}
                   label="Обновить бд игроков"
+                  onExecute={handleCommand}
+                />
+                <ProgressButton
+                  command={APICommands.UpdatePlayerAllDb}
+                  duration={130 * 1000}
+                  label="Обновить всю бд игроков"
                   onExecute={handleCommand}
                 />
                 <Button onClick={() => setOpen(true)}>Добавить танк</Button>
@@ -246,8 +255,7 @@ interface Props {
   duration: number; // Время выполнения (в миллисекундах)
   onExecute: (
     command: APICommands,
-    region?: APIRegion,
-    args?: string
+    args?: Record<string, any>
   ) => Promise<void>; // Функция для вызова
 }
 const ProgressButton = ({ label, command, duration, onExecute }: Props) => {

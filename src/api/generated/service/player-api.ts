@@ -22,6 +22,8 @@ import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObj
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError, operationServerMap } from '../base';
 // @ts-ignore
+import type { APICombatStats } from '../models';
+// @ts-ignore
 import type { APIErrorResponse } from '../models';
 // @ts-ignore
 import type { APIParameter } from '../models';
@@ -35,6 +37,57 @@ import type { APITopPlayer } from '../models';
  */
 export const PlayerApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
+        /**
+         * 
+         * @summary Get Dashboard Period
+         * @param {number} playerId 
+         * @param {number} startDay 
+         * @param {number} endDay 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getDashboardPeriodDashboardPeriodGet: async (playerId: number, startDay: number, endDay: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'playerId' is not null or undefined
+            assertParamExists('getDashboardPeriodDashboardPeriodGet', 'playerId', playerId)
+            // verify required parameter 'startDay' is not null or undefined
+            assertParamExists('getDashboardPeriodDashboardPeriodGet', 'startDay', startDay)
+            // verify required parameter 'endDay' is not null or undefined
+            assertParamExists('getDashboardPeriodDashboardPeriodGet', 'endDay', endDay)
+            const localVarPath = `/dashboard_period`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (playerId !== undefined) {
+                localVarQueryParameter['player_id'] = playerId;
+            }
+
+            if (startDay !== undefined) {
+                localVarQueryParameter['start_day'] = startDay;
+            }
+
+            if (endDay !== undefined) {
+                localVarQueryParameter['end_day'] = endDay;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
         /**
          * 
          * @summary Player
@@ -191,6 +244,21 @@ export const PlayerApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
+         * @summary Get Dashboard Period
+         * @param {number} playerId 
+         * @param {number} startDay 
+         * @param {number} endDay 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getDashboardPeriodDashboardPeriodGet(playerId: number, startDay: number, endDay: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<APICombatStats>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getDashboardPeriodDashboardPeriodGet(playerId, startDay, endDay, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['PlayerApi.getDashboardPeriodDashboardPeriodGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @summary Player
          * @param {string | null} [token] 
          * @param {*} [options] Override http request option.
@@ -255,6 +323,16 @@ export const PlayerApiFactory = function (configuration?: Configuration, basePat
     return {
         /**
          * 
+         * @summary Get Dashboard Period
+         * @param {PlayerApiGetDashboardPeriodDashboardPeriodGetRequest} requestParameters Request parameters.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getDashboardPeriodDashboardPeriodGet(requestParameters: PlayerApiGetDashboardPeriodDashboardPeriodGetRequest, options?: RawAxiosRequestConfig): AxiosPromise<APICombatStats> {
+            return localVarFp.getDashboardPeriodDashboardPeriodGet(requestParameters.playerId, requestParameters.startDay, requestParameters.endDay, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Player
          * @param {PlayerApiPlayerPlayerGetRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
@@ -295,6 +373,34 @@ export const PlayerApiFactory = function (configuration?: Configuration, basePat
         },
     };
 };
+
+/**
+ * Request parameters for getDashboardPeriodDashboardPeriodGet operation in PlayerApi.
+ * @export
+ * @interface PlayerApiGetDashboardPeriodDashboardPeriodGetRequest
+ */
+export interface PlayerApiGetDashboardPeriodDashboardPeriodGetRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof PlayerApiGetDashboardPeriodDashboardPeriodGet
+     */
+    readonly playerId: number
+
+    /**
+     * 
+     * @type {number}
+     * @memberof PlayerApiGetDashboardPeriodDashboardPeriodGet
+     */
+    readonly startDay: number
+
+    /**
+     * 
+     * @type {number}
+     * @memberof PlayerApiGetDashboardPeriodDashboardPeriodGet
+     */
+    readonly endDay: number
+}
 
 /**
  * Request parameters for playerPlayerGet operation in PlayerApi.
@@ -373,6 +479,18 @@ export interface PlayerApiTopPlayersTopPlayersGetRequest {
  * @extends {BaseAPI}
  */
 export class PlayerApi extends BaseAPI {
+    /**
+     * 
+     * @summary Get Dashboard Period
+     * @param {PlayerApiGetDashboardPeriodDashboardPeriodGetRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PlayerApi
+     */
+    public getDashboardPeriodDashboardPeriodGet(requestParameters: PlayerApiGetDashboardPeriodDashboardPeriodGetRequest, options?: RawAxiosRequestConfig) {
+        return PlayerApiFp(this.configuration).getDashboardPeriodDashboardPeriodGet(requestParameters.playerId, requestParameters.startDay, requestParameters.endDay, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * 
      * @summary Player

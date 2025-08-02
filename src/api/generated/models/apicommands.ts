@@ -21,12 +21,14 @@
  */
 
 export const APICommands = {
-    ResetUser: '!reset_user',
-    ResetClan: '!reset_clan',
-    DeleteUser: '!delete_user',
-    DeleteClan: '!delete_clan',
-    UpdatePlayerDb: '!update_player_db',
-    UpdateClanDb: '!update_clan_db'
+    ResetUser: 'reset_user',
+    ResetClan: 'reset_clan',
+    DeleteUser: 'delete_user',
+    DeleteClan: 'delete_clan',
+    UpdatePlayerDb: 'update_player_db',
+    UpdateClanDb: 'update_clan_db',
+    UpdatePlayerAllDb: 'update_player_all_db',
+    UpdateClanAllDb: 'update_clan_all_db'
 } as const;
 
 export type APICommands = typeof APICommands[keyof typeof APICommands];

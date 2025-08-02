@@ -36,11 +36,7 @@ const GroupItems = styled("ul")({
 export default function Search({
   AdminFunction,
 }: {
-  AdminFunction?: (
-    command: APICommands,
-    region?: APIRegion,
-    args?: string
-  ) => void;
+  AdminFunction?: (command: APICommands, args: Record<string, any>) => void;
 }) {
   const searchPlayers = async (query: string) => {
     const request = await PlayerApiFp().searchSearchGet(query);
@@ -65,12 +61,14 @@ export default function Search({
   const handleChange = (_: any, value: any) => {
     if (!value) return;
     const param =
-      value.group === "Clans" && "tag" in value ? value.tag : value.name;
+      value.group === "Clans" && "tag" in value
+        ? { tag: value.tag }
+        : { name: value.name };
     const command =
       value.group === "Clans" ? APICommands.ResetClan : APICommands.ResetUser;
 
     if (AdminFunction) {
-      AdminFunction(command, value.region, param);
+      AdminFunction(command, { region: region, ...param });
       return;
     }
 

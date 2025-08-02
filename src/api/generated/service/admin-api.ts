@@ -24,7 +24,7 @@ import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError
 // @ts-ignore
 import type { APIAdminStats } from '../models';
 // @ts-ignore
-import type { APICommand } from '../models';
+import type { APICommandRequest } from '../models';
 // @ts-ignore
 import type { APICreateTank } from '../models';
 // @ts-ignore
@@ -222,14 +222,14 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
         /**
          * 
          * @summary Protected Route
-         * @param {APICommand} aPICommand 
+         * @param {APICommandRequest} aPICommandRequest 
          * @param {string} [adminToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        protectedRouteAdminCommandsPost: async (aPICommand: APICommand, adminToken?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'aPICommand' is not null or undefined
-            assertParamExists('protectedRouteAdminCommandsPost', 'aPICommand', aPICommand)
+        protectedRouteAdminCommandsPost: async (aPICommandRequest: APICommandRequest, adminToken?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'aPICommandRequest' is not null or undefined
+            assertParamExists('protectedRouteAdminCommandsPost', 'aPICommandRequest', aPICommandRequest)
             const localVarPath = `/admin/commands`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -249,7 +249,7 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(aPICommand, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(aPICommandRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -359,13 +359,13 @@ export const AdminApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Protected Route
-         * @param {APICommand} aPICommand 
+         * @param {APICommandRequest} aPICommandRequest 
          * @param {string} [adminToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async protectedRouteAdminCommandsPost(aPICommand: APICommand, adminToken?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.protectedRouteAdminCommandsPost(aPICommand, adminToken, options);
+        async protectedRouteAdminCommandsPost(aPICommandRequest: APICommandRequest, adminToken?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.protectedRouteAdminCommandsPost(aPICommandRequest, adminToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AdminApi.protectedRouteAdminCommandsPost']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -440,7 +440,7 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
          * @throws {RequiredError}
          */
         protectedRouteAdminCommandsPost(requestParameters: AdminApiProtectedRouteAdminCommandsPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<any> {
-            return localVarFp.protectedRouteAdminCommandsPost(requestParameters.aPICommand, requestParameters.adminToken, options).then((request) => request(axios, basePath));
+            return localVarFp.protectedRouteAdminCommandsPost(requestParameters.aPICommandRequest, requestParameters.adminToken, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -561,10 +561,10 @@ export interface AdminApiLoginAdminLoginPostRequest {
 export interface AdminApiProtectedRouteAdminCommandsPostRequest {
     /**
      * 
-     * @type {APICommand}
+     * @type {APICommandRequest}
      * @memberof AdminApiProtectedRouteAdminCommandsPost
      */
-    readonly aPICommand: APICommand
+    readonly aPICommandRequest: APICommandRequest
 
     /**
      * 
@@ -651,7 +651,7 @@ export class AdminApi extends BaseAPI {
      * @memberof AdminApi
      */
     public protectedRouteAdminCommandsPost(requestParameters: AdminApiProtectedRouteAdminCommandsPostRequest, options?: RawAxiosRequestConfig) {
-        return AdminApiFp(this.configuration).protectedRouteAdminCommandsPost(requestParameters.aPICommand, requestParameters.adminToken, options).then((request) => request(this.axios, this.basePath));
+        return AdminApiFp(this.configuration).protectedRouteAdminCommandsPost(requestParameters.aPICommandRequest, requestParameters.adminToken, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

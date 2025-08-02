@@ -6,13 +6,17 @@ common.ts
 configuration.ts
 git_push.sh
 index.ts
+models/apiacount.ts
 models/apiadmin-stats.ts
 models/apiauth-login.ts
 models/apibase-stats.ts
+models/apibody-create-session-client-post.ts
 models/apiclan-db.ts
 models/apiclan-top.ts
-models/apicommand.ts
+models/apicombat-stats.ts
+models/apicommand-request.ts
 models/apicommands.ts
+models/apicreate-response.ts
 models/apicreate-tank.ts
 models/apierror-response.ts
 models/apigeneral-tanks.ts
@@ -26,6 +30,7 @@ models/apimedal.ts
 models/apimedals.ts
 models/apinow.ts
 models/apiparameter.ts
+models/apiplayer-details.ts
 models/apiplayer-model.ts
 models/apiprivate.ts
 models/apirating.ts
@@ -41,6 +46,7 @@ models/apirest-user.ts
 models/apisession.ts
 models/apistatistics.ts
 models/apistats-tank.ts
+models/apitank.ts
 models/apitop-player.ts
 models/apiupdate.ts
 models/apivalue.ts
@@ -48,6 +54,7 @@ models/index.ts
 service/admin-api.ts
 service/auth-api.ts
 service/clan-api.ts
+service/client-api.ts
 service/default-api.ts
 service/player-api.ts
 service/stats-api.ts

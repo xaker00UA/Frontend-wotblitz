@@ -204,7 +204,7 @@ export const AuthApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async logoutLogoutGet(token?: string | null, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>> {
+        async logoutLogoutGet(token?: string | null, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.logoutLogoutGet(token, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AuthApi.logoutLogoutGet']?.[localVarOperationServerIndex]?.url;
@@ -247,7 +247,7 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        logoutLogoutGet(requestParameters: AuthApiLogoutLogoutGetRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<boolean> {
+        logoutLogoutGet(requestParameters: AuthApiLogoutLogoutGetRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<any> {
             return localVarFp.logoutLogoutGet(requestParameters.token, options).then((request) => request(axios, basePath));
         },
     };
