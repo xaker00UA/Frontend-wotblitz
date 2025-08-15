@@ -21,6 +21,7 @@ import { Medal } from "./MedalComponent";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DateRangePicker } from "./DateChange";
+import DashBoardPlayer from "./Dashboard";
 
 type Props = {
   region: string;
@@ -193,6 +194,15 @@ export default function PlayerStack({ region, nickname }: Props) {
           current={general?.medals?.medals}
           session={details?.medals?.medals}
         />
+        {general ? (
+          <DashBoardPlayer
+            player_id={general.player_id}
+            start_day={Math.floor(
+              (from?.getTime() ?? Date.now() - 50 * 24 * 60 * 60 * 1000) / 1000
+            )}
+            end_day={Math.floor((to?.getTime() ?? Date.now()) / 1000)}
+          />
+        ) : null}
         <TableStats stats={details?.tanks ?? null} />
         <GridTanks tanks={transformTankData(details?.tanks?.now)} />
       </Stack>

@@ -31,6 +31,8 @@ import type { APICreateTank } from '../models';
 import type { APIErrorResponse } from '../models';
 // @ts-ignore
 import type { APILoginForm } from '../models';
+// @ts-ignore
+import type { APITask } from '../models';
 /**
  * AdminApi - axios parameter creator
  * @export
@@ -111,6 +113,41 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = localVarFormParams;
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Get Task
+         * @param {string} taskId 
+         * @param {string} [adminToken] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getTaskAdminTaskTaskIdGet: async (taskId: string, adminToken?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'taskId' is not null or undefined
+            assertParamExists('getTaskAdminTaskTaskIdGet', 'taskId', taskId)
+            const localVarPath = `/admin/task/{task_id}`
+                .replace(`{${"task_id"}}`, encodeURIComponent(String(taskId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -319,6 +356,20 @@ export const AdminApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Get Task
+         * @param {string} taskId 
+         * @param {string} [adminToken] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getTaskAdminTaskTaskIdGet(taskId: string, adminToken?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getTaskAdminTaskTaskIdGet(taskId, adminToken, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.getTaskAdminTaskTaskIdGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @summary Info
          * @param {number} [limit] 
          * @param {string} [adminToken] 
@@ -364,7 +415,7 @@ export const AdminApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async protectedRouteAdminCommandsPost(aPICommandRequest: APICommandRequest, adminToken?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
+        async protectedRouteAdminCommandsPost(aPICommandRequest: APICommandRequest, adminToken?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<APITask>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.protectedRouteAdminCommandsPost(aPICommandRequest, adminToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AdminApi.protectedRouteAdminCommandsPost']?.[localVarOperationServerIndex]?.url;
@@ -405,6 +456,16 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
         },
         /**
          * 
+         * @summary Get Task
+         * @param {AdminApiGetTaskAdminTaskTaskIdGetRequest} requestParameters Request parameters.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getTaskAdminTaskTaskIdGet(requestParameters: AdminApiGetTaskAdminTaskTaskIdGetRequest, options?: RawAxiosRequestConfig): AxiosPromise<any> {
+            return localVarFp.getTaskAdminTaskTaskIdGet(requestParameters.taskId, requestParameters.adminToken, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Info
          * @param {AdminApiInfoAdminInfoGetRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
@@ -439,7 +500,7 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        protectedRouteAdminCommandsPost(requestParameters: AdminApiProtectedRouteAdminCommandsPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<any> {
+        protectedRouteAdminCommandsPost(requestParameters: AdminApiProtectedRouteAdminCommandsPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<APITask> {
             return localVarFp.protectedRouteAdminCommandsPost(requestParameters.aPICommandRequest, requestParameters.adminToken, options).then((request) => request(axios, basePath));
         },
         /**
@@ -516,6 +577,27 @@ export interface AdminApiAddTankAdminAddTankPostRequest {
      * @memberof AdminApiAddTankAdminAddTankPost
      */
     readonly imageSmall?: File | null
+}
+
+/**
+ * Request parameters for getTaskAdminTaskTaskIdGet operation in AdminApi.
+ * @export
+ * @interface AdminApiGetTaskAdminTaskTaskIdGetRequest
+ */
+export interface AdminApiGetTaskAdminTaskTaskIdGetRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminApiGetTaskAdminTaskTaskIdGet
+     */
+    readonly taskId: string
+
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminApiGetTaskAdminTaskTaskIdGet
+     */
+    readonly adminToken?: string
 }
 
 /**
@@ -605,6 +687,18 @@ export class AdminApi extends BaseAPI {
      */
     public addTankAdminAddTankPost(requestParameters: AdminApiAddTankAdminAddTankPostRequest, options?: RawAxiosRequestConfig) {
         return AdminApiFp(this.configuration).addTankAdminAddTankPost(requestParameters.tankId, requestParameters.name, requestParameters.nation, requestParameters.tier, requestParameters.isPremium, requestParameters.adminToken, requestParameters.imageBig, requestParameters.imageSmall, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Get Task
+     * @param {AdminApiGetTaskAdminTaskTaskIdGetRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AdminApi
+     */
+    public getTaskAdminTaskTaskIdGet(requestParameters: AdminApiGetTaskAdminTaskTaskIdGetRequest, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).getTaskAdminTaskTaskIdGet(requestParameters.taskId, requestParameters.adminToken, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

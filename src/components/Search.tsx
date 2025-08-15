@@ -73,7 +73,9 @@ export default function Search({
     }
 
     navigate(
-      `/${region}/${value.group === "Clans" ? "clan" : "player"}/${param}`
+      `/${region}/${value.group === "Clans" ? "clan" : "player"}/${
+        value.name ? value.name : value.tag
+      }`
     );
   };
 

@@ -4,7 +4,6 @@ import {
   Stack,
   Typography,
   Paper,
-  LinearProgress,
   useTheme,
   IconButton,
 } from "@mui/material";
@@ -14,14 +13,15 @@ import { useNavigate } from "react-router-dom";
 import {
   AdminApiFp,
   APICommands,
-  APIRegion,
   APIAdminStats,
   APIRestUserDB,
+  APITaskStatusEnum,
 } from "../../api/generated";
 import { useError, useSuccess } from "../../hooks/ErrorContext";
 import Search from "../../components/Search";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import CreateTankModal from "./FormCreateTank";
+
 export default function AdminPanel() {
   const api = AdminApiFp();
   const addError = useError();
@@ -30,6 +30,9 @@ export default function AdminPanel() {
   const [data, setData] = useState<APIAdminStats | null>(null);
   const [open, setOpen] = useState(false);
   const theme = useTheme();
+  const [tasks, setTasks] = useState<
+    Record<string, { loading: boolean; progress: number }>
+  >({});
 
   const verify = async () => {
     try {
@@ -47,11 +50,13 @@ export default function AdminPanel() {
     await request();
     await verify();
   };
+
   const adminInfo = async () => {
     const request = await api.infoAdminInfoGet(100);
     const response = await request();
     setData(response.data);
   };
+
   useEffect(() => {
     adminInfo();
     verify();
@@ -77,20 +82,79 @@ export default function AdminPanel() {
     }
   };
 
+  const pollTaskStatus = (taskId: string, command: APICommands) => {
+    const intervalId = setInterval(async () => {
+      try {
+        const request = await api.getTaskAdminTaskTaskIdGet(taskId);
+        const response = await request();
+        const { status, progress } = response.data;
+
+        setTasks((prev) => ({
+          ...prev,
+          [command]: { ...prev[command], progress: progress },
+        }));
+
+        if (status === APITaskStatusEnum.Done) {
+          clearInterval(intervalId);
+          addSuccess(`Задача ${command} завершена`);
+          setTasks((prev) => ({
+            ...prev,
+            [command]: { loading: false, progress: 100 },
+          }));
+          setTimeout(() => {
+            setTasks((prev) => ({
+              ...prev,
+              [command]: { loading: false, progress: 0 },
+            }));
+          }, 5000);
+        }
+      } catch (e) {
+        clearInterval(intervalId);
+        const err = e as AxiosError<any>;
+        addError(err.response?.data?.detail ?? "Ошибка опроса задачи");
+        setTasks((prev) => ({
+          ...prev,
+          [command]: { loading: false, progress: 0 },
+        }));
+      }
+    }, 5000);
+  };
+
   const handleCommand = async (
     command: APICommands,
     args?: Record<string, any>
   ) => {
+    if (tasks[command]?.loading) return;
+
+    setTasks((prev) => ({
+      ...prev,
+      [command]: { loading: true, progress: 0 },
+    }));
+
     try {
       const request = await api.protectedRouteAdminCommandsPost({
         command: command,
         arguments: args,
       });
-      await request();
-      addSuccess("Команда успешно выполнена");
+      const response = await request();
+      const taskId = response.data.id;
+
+      if (taskId) {
+        pollTaskStatus(taskId, command);
+      } else {
+        addSuccess("Команда успешно выполнена (без задачи)");
+        setTasks((prev) => ({
+          ...prev,
+          [command]: { loading: false, progress: 100 },
+        }));
+      }
     } catch (e) {
       const err = e as AxiosError<any>;
       addError(err.response?.data?.detail ?? "Ошибка выполнения команды");
+      setTasks((prev) => ({
+        ...prev,
+        [command]: { loading: false, progress: 0 },
+      }));
     }
   };
 
@@ -134,27 +198,31 @@ export default function AdminPanel() {
               <Stack direction="row" spacing={2}>
                 <ProgressButton
                   command={APICommands.UpdateClanDb}
-                  duration={50 * 1000}
                   label="Обновить бд кланов"
                   onExecute={handleCommand}
+                  loading={tasks[APICommands.UpdateClanDb]?.loading}
+                  progress={tasks[APICommands.UpdateClanDb]?.progress}
                 />
                 <ProgressButton
                   command={APICommands.UpdateClanAllDb}
-                  duration={50 * 1000}
                   label="Обновить всю бд кланов"
                   onExecute={handleCommand}
+                  loading={tasks[APICommands.UpdateClanAllDb]?.loading}
+                  progress={tasks[APICommands.UpdateClanAllDb]?.progress}
                 />
                 <ProgressButton
                   command={APICommands.UpdatePlayerDb}
-                  duration={50 * 1000}
                   label="Обновить бд игроков"
                   onExecute={handleCommand}
+                  loading={tasks[APICommands.UpdatePlayerDb]?.loading}
+                  progress={tasks[APICommands.UpdatePlayerDb]?.progress}
                 />
                 <ProgressButton
                   command={APICommands.UpdatePlayerAllDb}
-                  duration={130 * 1000}
                   label="Обновить всю бд игроков"
                   onExecute={handleCommand}
+                  loading={tasks[APICommands.UpdatePlayerAllDb]?.loading}
+                  progress={tasks[APICommands.UpdatePlayerAllDb]?.progress}
                 />
                 <Button onClick={() => setOpen(true)}>Добавить танк</Button>
               </Stack>
@@ -230,9 +298,9 @@ export default function AdminPanel() {
                   padding: "10px",
                   borderRadius: "5px",
                   overflowY: "auto",
-                  maxHeight: "300px", // Ограничение высоты для скролла
-                  whiteSpace: "pre-wrap", // Чтобы строки переносились
-                  wordWrap: "break-word", // Разбивать длинные слова
+                  maxHeight: "300px",
+                  whiteSpace: "pre-wrap",
+                  wordWrap: "break-word",
                 }}
               >
                 {JSON.stringify(
@@ -252,35 +320,22 @@ export default function AdminPanel() {
 interface Props {
   label: string;
   command: APICommands;
-  duration: number; // Время выполнения (в миллисекундах)
   onExecute: (
     command: APICommands,
     args?: Record<string, any>
-  ) => Promise<void>; // Функция для вызова
+  ) => Promise<void>;
+  loading?: boolean;
+  progress?: number;
 }
-const ProgressButton = ({ label, command, duration, onExecute }: Props) => {
-  const [loading, setLoading] = useState(false);
-  const [progress, setProgress] = useState(0);
-
+const ProgressButton = ({
+  label,
+  command,
+  onExecute,
+  loading,
+  progress,
+}: Props) => {
   const handleClick = async () => {
-    setLoading(true);
-    setProgress(0);
-
-    const interval = setInterval(() => {
-      setProgress((prev) => Math.min(prev + 100 / (duration / 100), 100));
-    }, 100);
-
-    try {
-      await onExecute(command); // Вызываем функцию
-      // await new Promise((resolve) => setTimeout(resolve, duration));
-    } catch (e) {
-    } finally {
-      clearInterval(interval);
-      setProgress(100);
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      setLoading(false);
-      setTimeout(() => setProgress(0), 500); // Сброс после завершения
-    }
+    await onExecute(command);
   };
 
   return (
@@ -290,7 +345,6 @@ const ProgressButton = ({ label, command, duration, onExecute }: Props) => {
       disabled={loading}
       sx={{ position: "relative", overflow: "hidden" }}
     >
-      {/* Полупрозрачный цветной слой */}
       {loading && (
         <Box
           sx={{
@@ -298,8 +352,8 @@ const ProgressButton = ({ label, command, duration, onExecute }: Props) => {
             bottom: 0,
             left: 0,
             width: "100%",
-            height: `${progress}%`, // Заполняем снизу вверх
-            backgroundColor: "success.light", // Цвет заливки (можно менять)
+            height: `${progress ?? 0}%`,
+            backgroundColor: "success.light",
             transition: "height 0.1s ease-in-out",
           }}
         />
@@ -308,46 +362,3 @@ const ProgressButton = ({ label, command, duration, onExecute }: Props) => {
     </Button>
   );
 };
-
-function AnimationButton() {
-  const [loading, setLoading] = useState(false);
-  const [progress, setProgress] = useState(0);
-
-  const handleClick = () => {
-    setLoading(true);
-    setProgress(0);
-
-    const interval = setInterval(() => {
-      setProgress((prev) => Math.min(prev + 100 / (5000 / 100), 100));
-    }, 100);
-
-    setTimeout(() => {
-      clearInterval(interval);
-      setLoading(false);
-    }, 5000);
-  };
-
-  return (
-    <>
-      {loading ? (
-        <LinearProgress
-          variant="determinate"
-          value={progress}
-          color="success"
-          sx={{ width: 200, height: 40 }}
-        />
-      ) : (
-        <Button
-          variant="contained"
-          onClick={handleClick}
-          sx={{
-            width: 200,
-            height: 40,
-          }}
-        >
-          Загрузить
-        </Button>
-      )}
-    </>
-  );
-}

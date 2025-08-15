@@ -39,6 +39,7 @@ export * from './apisession';
 export * from './apistatistics';
 export * from './apistats-tank';
 export * from './apitank';
+export * from './apitask';
 export * from './apitop-player';
 export * from './apiupdate';
 export * from './apivalue';

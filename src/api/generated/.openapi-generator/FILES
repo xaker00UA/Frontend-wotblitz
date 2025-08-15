@@ -47,6 +47,7 @@ models/apisession.ts
 models/apistatistics.ts
 models/apistats-tank.ts
 models/apitank.ts
+models/apitask.ts
 models/apitop-player.ts
 models/apiupdate.ts
 models/apivalue.ts
