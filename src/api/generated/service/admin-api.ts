@@ -32,6 +32,8 @@ import type { APIErrorResponse } from '../models';
 // @ts-ignore
 import type { APILoginForm } from '../models';
 // @ts-ignore
+import type { APIRequestMessage } from '../models';
+// @ts-ignore
 import type { APITask } from '../models';
 /**
  * AdminApi - axios parameter creator
@@ -295,6 +297,43 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
         },
         /**
          * 
+         * @summary Send Message
+         * @param {APIRequestMessage} aPIRequestMessage 
+         * @param {string} [adminToken] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        sendMessageAdminMessagePost: async (aPIRequestMessage: APIRequestMessage, adminToken?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'aPIRequestMessage' is not null or undefined
+            assertParamExists('sendMessageAdminMessagePost', 'aPIRequestMessage', aPIRequestMessage)
+            const localVarPath = `/admin/message`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(aPIRequestMessage, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Verify Token
          * @param {string} [adminToken] 
          * @param {*} [options] Override http request option.
@@ -423,6 +462,20 @@ export const AdminApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Send Message
+         * @param {APIRequestMessage} aPIRequestMessage 
+         * @param {string} [adminToken] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async sendMessageAdminMessagePost(aPIRequestMessage: APIRequestMessage, adminToken?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.sendMessageAdminMessagePost(aPIRequestMessage, adminToken, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.sendMessageAdminMessagePost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @summary Verify Token
          * @param {string} [adminToken] 
          * @param {*} [options] Override http request option.
@@ -502,6 +555,16 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
          */
         protectedRouteAdminCommandsPost(requestParameters: AdminApiProtectedRouteAdminCommandsPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<APITask> {
             return localVarFp.protectedRouteAdminCommandsPost(requestParameters.aPICommandRequest, requestParameters.adminToken, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Send Message
+         * @param {AdminApiSendMessageAdminMessagePostRequest} requestParameters Request parameters.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        sendMessageAdminMessagePost(requestParameters: AdminApiSendMessageAdminMessagePostRequest, options?: RawAxiosRequestConfig): AxiosPromise<any> {
+            return localVarFp.sendMessageAdminMessagePost(requestParameters.aPIRequestMessage, requestParameters.adminToken, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -657,6 +720,27 @@ export interface AdminApiProtectedRouteAdminCommandsPostRequest {
 }
 
 /**
+ * Request parameters for sendMessageAdminMessagePost operation in AdminApi.
+ * @export
+ * @interface AdminApiSendMessageAdminMessagePostRequest
+ */
+export interface AdminApiSendMessageAdminMessagePostRequest {
+    /**
+     * 
+     * @type {APIRequestMessage}
+     * @memberof AdminApiSendMessageAdminMessagePost
+     */
+    readonly aPIRequestMessage: APIRequestMessage
+
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminApiSendMessageAdminMessagePost
+     */
+    readonly adminToken?: string
+}
+
+/**
  * Request parameters for verifyTokenAdminVerifyGet operation in AdminApi.
  * @export
  * @interface AdminApiVerifyTokenAdminVerifyGetRequest
@@ -746,6 +830,18 @@ export class AdminApi extends BaseAPI {
      */
     public protectedRouteAdminCommandsPost(requestParameters: AdminApiProtectedRouteAdminCommandsPostRequest, options?: RawAxiosRequestConfig) {
         return AdminApiFp(this.configuration).protectedRouteAdminCommandsPost(requestParameters.aPICommandRequest, requestParameters.adminToken, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Send Message
+     * @param {AdminApiSendMessageAdminMessagePostRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AdminApi
+     */
+    public sendMessageAdminMessagePost(requestParameters: AdminApiSendMessageAdminMessagePostRequest, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).sendMessageAdminMessagePost(requestParameters.aPIRequestMessage, requestParameters.adminToken, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

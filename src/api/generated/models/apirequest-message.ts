@@ -14,13 +14,17 @@
 
 
 
-export * from './service/admin-api';
-export * from './service/asyncapi-api';
-export * from './service/auth-api';
-export * from './service/clan-api';
-export * from './service/client-api';
-export * from './service/default-api';
-export * from './service/player-api';
-export * from './service/post-api';
-export * from './service/stats-api';
+/**
+ * 
+ * @export
+ * @interface APIRequestMessage
+ */
+export interface APIRequestMessage {
+    /**
+     * 
+     * @type {string}
+     * @memberof APIRequestMessage
+     */
+    'message': string;
+}
 

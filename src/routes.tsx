@@ -12,6 +12,7 @@ import AdminLogin from "./page/admin/LoginAdmin";
 import AdminPanel from "./page/admin/AdminPanel";
 import HomePage from "./page/home/Home";
 import FaqPage from "./page/faq/FaqPage";
+import ReleasePage, { ReleaseDetailsPage } from "./page/release/ReleasePage";
 
 export const router = createBrowserRouter([
   {
@@ -34,6 +35,9 @@ export const router = createBrowserRouter([
       { path: "about", element: <FaqPage /> },
       { path: "admin", element: <AdminPanel /> },
       { path: "admin/login", element: <AdminLogin /> },
+      { path: "release", element: <ReleasePage /> },
+      { path: "release/:id", element: <ReleaseDetailsPage /> },
+
       { path: "*", element: <div>404</div> },
     ],
   },

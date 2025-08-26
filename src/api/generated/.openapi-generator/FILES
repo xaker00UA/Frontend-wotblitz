@@ -35,6 +35,10 @@ models/apiplayer-model.ts
 models/apiprivate.ts
 models/apirating.ts
 models/apiregion.ts
+models/apirequest-message.ts
+models/apirequest-post.ts
+models/apiresponse-post.ts
+models/apiresponse-posts.ts
 models/apirest-clan.ts
 models/apirest-member.ts
 models/apirest-private.ts
@@ -43,6 +47,7 @@ models/apirest-statistics.ts
 models/apirest-stats-tank.ts
 models/apirest-user-db.ts
 models/apirest-user.ts
+models/apisession-reset-request.ts
 models/apisession.ts
 models/apistatistics.ts
 models/apistats-tank.ts
@@ -53,9 +58,11 @@ models/apiupdate.ts
 models/apivalue.ts
 models/index.ts
 service/admin-api.ts
+service/asyncapi-api.ts
 service/auth-api.ts
 service/clan-api.ts
 service/client-api.ts
 service/default-api.ts
 service/player-api.ts
+service/post-api.ts
 service/stats-api.ts

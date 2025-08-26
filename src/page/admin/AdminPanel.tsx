@@ -16,19 +16,24 @@ import {
   APIAdminStats,
   APIRestUserDB,
   APITaskStatusEnum,
+  PostApiFp,
 } from "../../api/generated";
 import { useError, useSuccess } from "../../hooks/ErrorContext";
 import Search from "../../components/Search";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import CreateTankModal from "./FormCreateTank";
+import FormCreatePost from "./FormCreatePost";
 
 export default function AdminPanel() {
   const api = AdminApiFp();
+  const postApi = PostApiFp();
   const addError = useError();
   const addSuccess = useSuccess();
   const navigate = useNavigate();
   const [data, setData] = useState<APIAdminStats | null>(null);
-  const [open, setOpen] = useState(false);
+  const [openTank, setOpenTank] = useState(false);
+  const [openPost, setOpenPost] = useState(false);
+  const [openMessage, setOpenMessage] = useState(false);
   const theme = useTheme();
   const [tasks, setTasks] = useState<
     Record<string, { loading: boolean; progress: number }>
@@ -119,7 +124,34 @@ export default function AdminPanel() {
       }
     }, 5000);
   };
+  const handlePost = async (data: any) => {
+    try {
+      const request = await postApi.postCreatePostPost(data);
+      await request();
+      addSuccess("Пост успешно добавлен");
+    } catch (e) {
+      const err = e as AxiosError<any>;
+      const errors = err.response?.data?.detail;
 
+      if (Array.isArray(errors)) {
+        const messages = errors.map((e) => e.msg).join(", ");
+        addError(messages);
+      } else {
+        addError(errors);
+      }
+    }
+  };
+  const sendMessage = async ({ text }: { text: string }) => {
+    try {
+      const request = await api.sendMessageAdminMessagePost({
+        message: text,
+      });
+      await request();
+      addSuccess("Сообщение успешно отправлено");
+    } catch (e) {
+      console.error(e);
+    }
+  };
   const handleCommand = async (
     command: APICommands,
     args?: Record<string, any>
@@ -194,6 +226,12 @@ export default function AdminPanel() {
             <Stack sx={{ height: "100%" }} direction="column" spacing={12}>
               <Stack direction="row" spacing={2}>
                 <Search AdminFunction={handleCommand}></Search>
+                <Button onClick={() => setOpenPost(true)}>
+                  Добавить релиз
+                </Button>
+                <Button onClick={() => setOpenMessage(true)}>
+                  Отправить сообщение
+                </Button>
               </Stack>
               <Stack direction="row" spacing={2}>
                 <ProgressButton
@@ -224,14 +262,24 @@ export default function AdminPanel() {
                   loading={tasks[APICommands.UpdatePlayerAllDb]?.loading}
                   progress={tasks[APICommands.UpdatePlayerAllDb]?.progress}
                 />
-                <Button onClick={() => setOpen(true)}>Добавить танк</Button>
+                <Button onClick={() => setOpenTank(true)}>Добавить танк</Button>
               </Stack>
             </Stack>
           </Paper>
           <CreateTankModal
-            open={open}
+            open={openTank}
             onSubmit={handleSendCrateTank}
-            onClose={() => setOpen(false)}
+            onClose={() => setOpenTank(false)}
+          />
+          <FormCreatePost
+            open={openPost}
+            onClose={() => setOpenPost(false)}
+            onSubmit={handlePost}
+          />
+          <FormCreatePost
+            open={openMessage}
+            onClose={() => setOpenMessage(false)}
+            onSubmit={sendMessage}
           />
         </Box>
 

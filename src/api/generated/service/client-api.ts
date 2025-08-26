@@ -29,6 +29,8 @@ import type { APICreateResponse } from '../models';
 import type { APIErrorResponse } from '../models';
 // @ts-ignore
 import type { APIRestUser } from '../models';
+// @ts-ignore
+import type { APISessionResetRequest } from '../models';
 /**
  * ClientApi - axios parameter creator
  * @export
@@ -157,13 +159,13 @@ export const ClientApiAxiosParamCreator = function (configuration?: Configuratio
         /**
          * 
          * @summary Reset Session
-         * @param {string} body 
+         * @param {APISessionResetRequest} aPISessionResetRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        resetSessionClientResetPost: async (body: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'body' is not null or undefined
-            assertParamExists('resetSessionClientResetPost', 'body', body)
+        resetSessionClientResetPost: async (aPISessionResetRequest: APISessionResetRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'aPISessionResetRequest' is not null or undefined
+            assertParamExists('resetSessionClientResetPost', 'aPISessionResetRequest', aPISessionResetRequest)
             const localVarPath = `/client/reset`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -186,7 +188,7 @@ export const ClientApiAxiosParamCreator = function (configuration?: Configuratio
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(aPISessionResetRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -245,12 +247,12 @@ export const ClientApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Reset Session
-         * @param {string} body 
+         * @param {APISessionResetRequest} aPISessionResetRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async resetSessionClientResetPost(body: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<APICreateResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.resetSessionClientResetPost(body, options);
+        async resetSessionClientResetPost(aPISessionResetRequest: APISessionResetRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<APICreateResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.resetSessionClientResetPost(aPISessionResetRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ClientApi.resetSessionClientResetPost']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -303,7 +305,7 @@ export const ClientApiFactory = function (configuration?: Configuration, basePat
          * @throws {RequiredError}
          */
         resetSessionClientResetPost(requestParameters: ClientApiResetSessionClientResetPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<APICreateResponse> {
-            return localVarFp.resetSessionClientResetPost(requestParameters.body, options).then((request) => request(axios, basePath));
+            return localVarFp.resetSessionClientResetPost(requestParameters.aPISessionResetRequest, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -358,10 +360,10 @@ export interface ClientApiGetSessionClientGetRequest {
 export interface ClientApiResetSessionClientResetPostRequest {
     /**
      * 
-     * @type {string}
+     * @type {APISessionResetRequest}
      * @memberof ClientApiResetSessionClientResetPost
      */
-    readonly body: string
+    readonly aPISessionResetRequest: APISessionResetRequest
 }
 
 /**
@@ -416,7 +418,7 @@ export class ClientApi extends BaseAPI {
      * @memberof ClientApi
      */
     public resetSessionClientResetPost(requestParameters: ClientApiResetSessionClientResetPostRequest, options?: RawAxiosRequestConfig) {
-        return ClientApiFp(this.configuration).resetSessionClientResetPost(requestParameters.body, options).then((request) => request(this.axios, this.basePath));
+        return ClientApiFp(this.configuration).resetSessionClientResetPost(requestParameters.aPISessionResetRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
